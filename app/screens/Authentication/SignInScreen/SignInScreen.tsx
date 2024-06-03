@@ -5,10 +5,13 @@ import CustomInput from '../../../../components/CustomInput';
 import CustomButton from '../../../../components/CustomButton';
 import SocialSignInButtons from '@/components/SocialSignInButtons/SocialSignInButtons';
 import { Link, router } from 'expo-router';
+import { FIREBASE_AUTH, GOOGLE_AUTH } from '@/FirebaseConfig';
+import {signInWithEmailAndPassword, signInWithPopup} from 'firebase/auth';
 
 const SignInScreen = () => {
     const[username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const auth = FIREBASE_AUTH;
     //useState hook is used to create a state variable inputValue &
     // a state update function setInputValue
 
@@ -29,7 +32,23 @@ const SignInScreen = () => {
                 <CustomButton 
                     text='Sign In' 
                     onPress={ ()=> { console.warn('Signed In') 
-                    router.navigate('/screens/home')}} 
+                    signInWithEmailAndPassword(auth, username, password)
+                    .then(() => {
+                        console.log('Signed In!');
+                        router.navigate('/screens/home');
+                        }).catch(error => {
+                    if (error.code === 'auth/user-not-found') {
+                        console.warn('user does not exist.');
+                    }
+                    if (error.code === 'auth/wrong-password') {
+                        console.warn('incorrect password');
+                    }
+                    if(error.code === 'auth/invalid-email') {
+                        console.warn('Invalid email entered')
+                    }
+                    console.error(error);
+                    });
+                }} 
                     />
                 <CustomButton 
                     text='Forgot Password?' 

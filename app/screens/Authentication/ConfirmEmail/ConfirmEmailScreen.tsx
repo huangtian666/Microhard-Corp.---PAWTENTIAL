@@ -31,7 +31,7 @@ const SignUpScreen = () => {
                 setValue = {setCode} placeholderTextColor='gray'/>
                 <CustomButton 
                     text='Confirm' 
-                    onPress={ ()=> { console.warn('Signed Up Successfully') 
+                    onPress={ ()=> { console.warn('Signed Up Successfully, Developing..') 
                     router.navigate('/screens/Authentication/SignInScreen')}} 
                     style ={styles.confirmButton}
                     />

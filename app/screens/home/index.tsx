@@ -1,9 +1,15 @@
 import { Link } from 'expo-router';
 import { View, Text, StyleSheet,Button, TouchableOpacity,Image} from 'react-native';
 import naruto from '../../../assets/images/naruto.png';
+import CustomButton from '@/components/CustomButton';
+import { FIREBASE_AUTH } from '@/FirebaseConfig';
+import { signOut } from 'firebase/auth';
+import {router} from 'expo-router';
 
 
 export default function HomeScreen() {
+
+  const auth = FIREBASE_AUTH;
 
   const handlePress = () => {
     console.log("pressed") //print messages to the console
@@ -12,6 +18,17 @@ export default function HomeScreen() {
   const pressImage = () => {
     console.log("meow")
   }
+
+  const handleSignOut = () => {
+    signOut(auth).then(() => {
+            console.warn('User signed out');
+            router.navigate('/screens/Authentication/SignInScreen');
+        })
+        .catch(error => {
+            console.error('Sign out error:', error);
+        });
+};
+
 
   return (
     <View style={styles.container}>
@@ -23,10 +40,12 @@ export default function HomeScreen() {
             source ={naruto}
             style={styles.image}/>
       </TouchableOpacity>
+    <CustomButton
+        text='Sign Out' 
+        onPress={ handleSignOut}
+    />
     </View>
-  );//{} needs to be used when using javascript in this code style  
-  // style ={styles.link} changes the style of the link
-}
+ )}
 
 const styles = StyleSheet.create({
   container: {

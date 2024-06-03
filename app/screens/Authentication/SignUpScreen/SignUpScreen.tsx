@@ -4,22 +4,17 @@ import CustomInput from '../../../../components/CustomInput';
 import CustomButton from '../../../../components/CustomButton';
 import SocialSignInButtons from '../../../../components/SocialSignInButtons';
 import {router} from 'expo-router';
+import { FIREBASE_AUTH } from '@/FirebaseConfig';
+import {createUserWithEmailAndPassword} from 'firebase/auth';
 
 const SignUpScreen = () => {
     const[username, setUsername] = useState('');
     const[email, setEmail] = useState('');
     const[password, setPassword] = useState('');
     const[forgotPassword,setForgotPassword] = useState('');
+    const auth = FIREBASE_AUTH;
     //useState hook is used to create a state variable inputValue &
     // a state update function setInputValue
-
-    const onSignUpPressed = () => {
-        console.warn('signed up');
-    }
-
-    const onSignInPressed = () => {
-        console.warn('Sign in');
-    }
 
     const onTermsOfUsePressed = () => {
         console.warn('Terms of Use');
@@ -28,6 +23,17 @@ const SignUpScreen = () => {
     const onPrivacyPolicyPressed = () => {
         console.warn('Privacy Policy');
     }
+
+    const isValidPassword = (password: string): boolean => {
+        const minLength = 8;
+        const hasNumber = /\d/.test(password);
+        const hasUpper = /[A-Z]/.test(password);
+        const hasSpecial = /[!@#\$%\^\&*\)\(+=._-]/.test(password);
+    
+        return password.length >= minLength && hasNumber && hasUpper && hasSpecial;
+    };
+    
+    
 
     const {height} = useWindowDimensions();
     
@@ -50,7 +56,20 @@ const SignUpScreen = () => {
                 <CustomButton 
                     text='Sign Up' 
                     onPress={ ()=> { console.warn('Verfication Code Sent') 
-                    router.navigate('/screens/Authentication/ConfirmEmail')}} 
+                    createUserWithEmailAndPassword(auth,email, password)
+                    .then(() => {
+                        console.log('User account created & signed in!');
+                        router.navigate('/screens/Authentication/ConfirmEmail')
+                        }).catch(error => {
+                    if (error.code === 'auth/email-already-in-use') {
+                        console.log('That email address is already in use!');
+                    }
+                    if (error.code === 'auth/invalid-email') {
+                        console.log('That email address is invalid!');
+                    }
+                    console.error(error);
+                    });
+                }} 
                     />
                 <Text style = {styles.text2}> 
                     By signing up, you confirm that you accept our {' '}
