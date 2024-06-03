@@ -22,10 +22,10 @@ const ResetPasswordScreen3 = () => {
                 <Text style ={styles.text}>Reset Your Password</Text>
                 <Text style = {styles.label}>Reset Password</Text>
                 <CustomInput placeholder='new password' value={password} 
-                setValue = {setPassword} placeholderTextColor='gray'/>
-                <Text style = {styles.label}>Verification Code</Text>
+                setValue = {setPassword} placeholderTextColor='gray' secureTextEntry={true}/>
+                <Text style = {styles.label}>Confirm Password</Text>
                 <CustomInput placeholder='confirm password' value={confirmPW} 
-                setValue = {setConfirmPW} placeholderTextColor='gray'/>
+                setValue = {setConfirmPW} placeholderTextColor='gray' secureTextEntry={true}/>
                 <CustomButton 
                     text='Reset Password' 
                     onPress={onResetPressed}

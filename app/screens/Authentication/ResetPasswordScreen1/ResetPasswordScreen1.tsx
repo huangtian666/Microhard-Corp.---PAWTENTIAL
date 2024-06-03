@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
         paddingTop: 60,
         flex:1,
         backgroundColor:'#FFF2CD',
-        paddingBottom: 450,
+        paddingBottom: 460,
     },
     text: {
         fontSize: 30,
