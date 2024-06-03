@@ -1,4 +1,4 @@
-# PAWTENTIAL
+# PAWTENTIAL 🐶 👩‍🎓 🧑‍🎓
 
 NUS orbital 2024 team 6087
 
