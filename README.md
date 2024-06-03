@@ -1,50 +1,46 @@
-# Welcome to your Expo app 👋
+# PAWTENTIAL
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+NUS orbital 2024 team 6087
 
-## Get started
+Welcome to PAWTENTIAL, your new companion app designed to enhance your study and productivity sessions with customizable timers, tracking, and a unique virtual pet system.
 
-1. Install dependencies
+## Motivation
 
-   ```bash
-   npm install
-   ```
+PAWTENTIAL is designed to make studying more engaging and rewarding by combining productivity tools with a virtual pet care system. By incorporating game-like elements and rewards, users are encouraged to stay focused and motivated throughout their study sessions. The app aims to create a fun and interactive way to manage study time and productivity, making the process less tedious and more enjoyable.
 
-2. Start the app
 
-   ```bash
-    npx expo start
-   ```
+## Features
 
-In the output, you'll find options to open the app in a
+### Customizable Study Timer
+- **Pomodoro Technique:** Default 45-minute study sessions with 5-minute breaks.
+- **Customization:** Modify the duration of study periods and breaks to suit your study habits.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### Productivity Tracker
+- **Session Logs:** Keep a record of each study session.
+- **Visual Analytics:**
+  - Track and review focused hours daily and by month.
+  - Achievements for hitting weekly and monthly study goals with PAWcoin rewards.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### White Noise Player
+- **Enhance Focus:** Select from a variety of soothing sounds like rain, ocean, or stream to improve concentration.
 
-## Get a fresh project
+### PAWcoin Reward System
+- **Incentivize Productivity:** Earn coins by completing study sessions to use in the virtual pet store.
 
-When you're ready, run:
+### Virtual Pet System
+- **Interactive Pets:** Care for your virtual pet by feeding, playing, and dressing them.
+- **Health and Mood Management:**
+  - Manage your pet’s health and mood through interactions and care items from the pet shop.
 
-```bash
-npm run reset-project
-```
+### User Authentication
+- **Secure Access:** Log in and register with email to ensure your data is protected and personalized.
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## User Guide
 
-## Learn more
+### Getting Started
 
-To learn more about developing your project with Expo, look at the following resources:
+1. **Sign Up:**
+   - Register for a new account using your email.
+2. **Log In:**
+   - Log in to your account to start using PAWTENTIAL.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
