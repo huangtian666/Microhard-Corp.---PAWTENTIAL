@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "446504650271",
+    "project_id": "pawtential-d1b22",
+    "storage_bucket": "pawtential-d1b22.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:446504650271:android:e7677a824b063ac44cf72a",
+        "android_client_info": {
+          "package_name": "pawtential.andriod"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "446504650271-2pgknbfgaspvn961u1j4gl6dve395rks.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhw8ig59Uw_SxAXwFKq9vvI1gsbSQYXys"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "446504650271-2pgknbfgaspvn961u1j4gl6dve395rks.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "446504650271-4p799v09gvepaai2qvurtl2jkdk853qh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "pawtential.ios"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
