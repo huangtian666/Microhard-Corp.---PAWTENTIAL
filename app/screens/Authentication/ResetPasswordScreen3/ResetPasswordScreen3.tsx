@@ -1,19 +1,60 @@
-import {View, Text, StyleSheet, useWindowDimensions, ScrollView} from 'react-native';
+import {View, Text, StyleSheet, useWindowDimensions, ScrollView, Dimensions, Alert} from 'react-native';
 import React, {useState} from 'react';
 import CustomInput from '../../../../components/CustomInput';
 import CustomButton from '../../../../components/CustomButton';
 import {router} from 'expo-router';
+import { useRoute } from '@react-navigation/native';
 
 const ResetPasswordScreen3 = () => {
+    const route = useRoute();
     const[password, setPassword] = useState('');
     const[confirmPW, setConfirmPW] = useState('');
+    const { email } = route.params;
 
-    const onResetPressed = () => {
-        console.warn('Sucessfully Reset');
-    }
+    const isValidPassword = (password: string): boolean => {
+        const minLength = 8;
+        const hasNumber = /\d/.test(password);
+        const hasUpper = /[A-Z]/.test(password);
+        const hasSpecial = /[!@#\$%\^\&*\)\(+=._-]/.test(password);
+    
+        return password.length >= minLength && hasNumber && hasUpper && hasSpecial;
+    };
+
+    const onResetPressed = async () => {
+        console.log('reset password');
+        
+        if (!isValidPassword(password)) {
+            return;
+        }
+
+        if (password !== confirmPW) {
+            Alert.alert('Error', 'Passwords do not match.');
+            return;
+        }
+        try {
+            const response = await fetch('http://192.168.101.29:3001/reset-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            if (response.ok) {
+                Alert.alert('Success', 'Password reset successfully.');
+                router.navigate('/screens/Authentication/SignInScreen')
+            } else {
+                Alert.alert('Error', 'Failed to reset password. Please try again.');
+            }
+        } catch (err) {
+            console.error('Error updating password:', err);
+            Alert.alert('Error', 'Failed to reset password. Please try again.');
+        }
+    };
 
     const onSignInPressed = () => {
-        console.warn('SignIn');
+        console.log('Back to Sign In') 
+        router.navigate('/screens/Authentication/SignInScreen')
     }
 
     return (
@@ -32,8 +73,7 @@ const ResetPasswordScreen3 = () => {
                     />
                 <CustomButton 
                     text='Back to Sign In' 
-                    onPress={ ()=> { console.warn('Back to Sign In') 
-                    router.navigate('/screens/Authentication/SignInScreen')}} 
+                    onPress={onSignInPressed} 
                     type='TERTIARY'
                     />
             </View>
@@ -44,15 +84,15 @@ const ResetPasswordScreen3 = () => {
 const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
-        paddingTop: 60,
-        paddingBottom: 370,
+        width: Dimensions.get('window').width,
+        height:Dimensions.get('window').height,
         flex: 1,
         backgroundColor:'#FFF2CD',
     },
     text: {
         fontSize: 30,
         color: '#551B26',
-        marginTop:60,
+        marginTop:130,
         fontWeight: 'bold',
         paddingBottom: 40,
     },
@@ -60,8 +100,8 @@ const styles = StyleSheet.create({
         color: 'grey',
         fontSize: 15,
         marginTop: 10,
-        textAlign: 'left',
-        marginLeft: -210,
+        paddingLeft: '8%', // Responsive padding from the left
+        alignSelf: 'flex-start',
     },
 });
 

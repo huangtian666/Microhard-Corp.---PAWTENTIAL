@@ -1,22 +1,26 @@
 import React from 'react';
 import {Text, StyleSheet, Pressable} from 'react-native';
 
-const CustomButton = ({onPress, text, type = 'PRIMARY', bgColor, fgColor}) => { //defining properties of the button
+const CustomButton = ({onPress, text, type = 'PRIMARY', bgColor, fgColor, disabled}) => { //defining properties of the button
     return (
         <Pressable 
             onPress={onPress} 
+            disabled = {disabled}
             style = {[
                 styles.container, 
                 styles[`container_${type}`],
-                bgColor ? {backgroundColor: bgColor} : {}
+                bgColor ? {backgroundColor: bgColor} : {},
+                disabled && styles.container_DISABLED,
             ]}>
             <Text style={[
                 styles.text, 
                 styles[`text_${type}`],
-                fgColor ? {color: fgColor} : {} //if fgColor exists, 
+                fgColor ? {color: fgColor} : {} ,//if fgColor exists, 
                 //set the color to fgColor, if not empty
+                disabled && styles.text_DISABLED // Apply disabled text styles
                 ]}>
-            {text}</Text>
+            {text}
+            </Text>
         </Pressable>
     )
 }
@@ -38,6 +42,9 @@ const styles = StyleSheet.create({
     },
     container_TERTIARY: {
     },
+    container_DISABLED: {
+        borderColor: '#cccccc',
+      },
 
     text: {
         fontWeight: 'bold',
@@ -50,6 +57,9 @@ const styles = StyleSheet.create({
     text_TERTIARY: {
         color: 'gray',
         fontSize: 13,
+    },
+    text_DISABLED: {
+        color: 'gray',
     }
 })
 

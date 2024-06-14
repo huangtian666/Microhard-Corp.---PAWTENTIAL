@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { SafeAreaView, StyleSheet,Dimensions } from 'react-native';
 import { SignInScreen, SignUpScreen, ConfirmEmailScreen } from './Authentication';
 
 export default function Index() {
@@ -16,6 +16,9 @@ const styles = StyleSheet.create({
     root: {
         backgroundColor:'#FFF2CD',
         flex: 1,
+        width: Dimensions.get('window').width,
+        height:Dimensions.get('window').height,
+
     },
 })
 

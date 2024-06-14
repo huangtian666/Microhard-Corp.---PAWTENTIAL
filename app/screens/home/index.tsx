@@ -1,78 +1,41 @@
-import { Link } from 'expo-router';
-import { View, Text, StyleSheet,Button, TouchableOpacity,Image} from 'react-native';
-import naruto from '../../../assets/images/naruto.png';
-import CustomButton from '@/components/CustomButton';
+/*import React, { useState, useEffect } from 'react';
+import { Alert, ActivityIndicator } from 'react-native';
 import { FIREBASE_AUTH } from '@/FirebaseConfig';
-import { signOut } from 'firebase/auth';
-import {router} from 'expo-router';
+import HomeScreen from './HomeScreen';
+import SignInScreen from '../Authentication/SignInScreen';
 
-
-export default function HomeScreen() {
-
+const HomePage = () => {
+  // Set an initializing state whilst Firebase connects
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState(null);
   const auth = FIREBASE_AUTH;
 
-  const handlePress = () => {
-    console.log("pressed") //print messages to the console
-  } // arrow function in js
-
-  const pressImage = () => {
-    console.log("meow")
+  // Handle user state changes
+  function onAuthStateChanged(user) {
+    setUser(user);
+    if (initializing) setInitializing(false);
   }
 
-  const handleSignOut = () => {
-    signOut(auth).then(() => {
-            console.warn('User signed out');
-            router.navigate('/screens/Authentication/SignInScreen');
-        })
-        .catch(error => {
-            console.error('Sign out error:', error);
-        });
-};
+  useEffect(() => {
+    const subscriber = auth.onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
 
+  if (initializing) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+  
+
+  if (!user) {
+    return (
+        <SignInScreen/>
+    );
+  }
 
   return (
-    <View style={styles.container}>
-      <Text style ={styles.text}>Welcome to PAWTENTIAL!</Text> 
-      <Button title = "Timer" onPress={handlePress} /> 
-      <Link href="/details" style ={styles.link}>View details</Link>
-      <TouchableOpacity onPress={pressImage}>
-        <Image 
-            source ={naruto}
-            style={styles.image}/>
-      </TouchableOpacity>
-    <CustomButton
-        text='Sign Out' 
-        onPress={ handleSignOut}
-    />
-    </View>
- )}
+    <HomeScreen/>
+  );
+}
+export default HomePage;*/
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,//make everything(words, images) occupy the entire page
-    justifyContent: 'center',
-    alignItems: 'center',
-    //flexDirection: "row"
-  },// flexbox 
-  text: {
-    color: "green",
-    fontSize: 20,
-  },  
-  link: {
-    color: 'orange',
-    fontSize: 18,
-  },
-  image: {
-    width: 80,
-    height: 250,
-  },
-  touchable: {
-    marginTop: 50,
-    padding: 10,
-    borderRadius: 5,
-    backgroundColor: '#ddd',
-    position: 'absolute',
-    top: 50,
-    left: 50,
-  },
-});
+export {default} from './HomeScreen';

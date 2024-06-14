@@ -1,11 +1,43 @@
-import {View, Text, Image, StyleSheet, useWindowDimensions, ScrollView} from 'react-native';
-import React, {useState} from 'react';
+import {View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, Dimensions, Alert} from 'react-native';
+import React, {useState, useEffect} from 'react';
 import CustomInput from '../../../../components/CustomInput';
 import CustomButton from '../../../../components/CustomButton';
 import {router} from 'expo-router';
+import { FIREBASE_AUTH } from '@/FirebaseConfig';
+import {sendEmailVerification} from 'firebase/auth';
 
-const SignUpScreen = () => {
-    const[code, setCode] = useState('');
+const ConfirmEmailScreen = () => {
+    const auth = FIREBASE_AUTH;
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+    const [countdown, setCountdown] = useState(60);
+    const [emailVerified, setEmailVerified] = useState(false); // Track email verification status
+
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+            if (user) {
+                user.reload().then(() => {
+                    setEmailVerified(user.emailVerified);
+                });
+            }
+        });
+
+        let timer;
+        if (countdown > 0) {
+            console.log('count down start');
+          timer = setInterval(() => {
+            setCountdown((prevCountdown) => {
+              if (prevCountdown === 1) {
+                clearInterval(timer);
+                setIsButtonDisabled(false);
+                return 0; // Reset countdown
+              }
+              return prevCountdown - 1;
+            });
+          }, 1000);
+        }
+        return () => clearInterval(timer);
+      }, [countdown]);
 
 
     const onTermsOfUsePressed = () => {
@@ -16,9 +48,33 @@ const SignUpScreen = () => {
         console.warn('Privacy Policy');
     }
 
-    const onResendPressed = () => {
-        console.warn('Resend code')
+    const onResendPressed = async () => {
+        setIsButtonDisabled(true); // Disable the button
+        setCountdown(60);
+        try {
+            await sendEmailVerification(auth.currentUser);
+            console.log('Resend code');
+            Alert.alert('Success', 'Verification email resent. Please check your email.');
+        } catch (error) {
+            if (error.code === 'auth/too-many-requests') {
+                Alert.alert('Error', 'Too many requests. Please try again later.');
+            } else {
+                Alert.alert('Error', error.message);
+            }
+        }
+    };
+
+    const onConfirmPressed = async () => {
+        if (auth.currentUser) {
+            await auth.currentUser.reload();
+            if (auth.currentUser.emailVerified) {
+                router.navigate('/screens/Authentication/SignInScreen');
+            } else {
+                Alert.alert('Email not verified', 'Please verify your email');
+            }
+        }
     }
+
 
     const {height} = useWindowDimensions();
     
@@ -26,19 +82,20 @@ const SignUpScreen = () => {
         <ScrollView>
             <View style={styles.container}>
                 <Text style ={styles.text1}>Confirm Your Email!</Text>
-                <Text style = {styles.label}>Verfication Code</Text>
-                <CustomInput placeholder='Enter code' value={code} 
-                setValue = {setCode} placeholderTextColor='gray'/>
-                <CustomButton 
+                <Text style = {styles.instruction}>Please check your email to verify your account.{'\n'}
+                If you haven't received the verification email, click 'Resend Code' to receive a new one.{'\n'}
+                Once you have verified your email, click 'Confirm' to proceed.
+                </Text>
+                <CustomButton  
                     text='Confirm' 
-                    onPress={ ()=> { console.warn('Signed Up Successfully, Developing..') 
-                    router.navigate('/screens/Authentication/SignInScreen')}} 
-                    style ={styles.confirmButton}
+                    onPress={ onConfirmPressed }
+                    style ={styles.confirmButton} 
                     />
                 <CustomButton 
-                    text='Resend Code'
+                    text={countdown > 0 ? `Resend Link (${countdown})` : 'Resend Link'}
                     onPress={onResendPressed}
                     type='SECONDARY'
+                    disabled={isButtonDisabled}
                     />
                 <Text style = {styles.text2}> 
                     By signing up, you confirm that you accept our {' '}
@@ -47,9 +104,10 @@ const SignUpScreen = () => {
                     </Text>
                 <CustomButton 
                     text= "Back to Sign In" 
-                    onPress={ ()=> { console.warn('Back to Sign In') 
-                    router.navigate('/screens/Authentication/SignInScreen')}} 
-                    type='TERTIARY'
+                    onPress={ ()=> { 
+                        console.log('Back to Sign In') 
+                        router.navigate('/screens/Authentication/SignInScreen')}} 
+                        type='TERTIARY'
                     />
             </View>
             </ScrollView>
@@ -61,16 +119,15 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         backgroundColor: '#FFF2CD',
-        paddingTop: 50,
-        width: '100%',
-        paddingBottom: 350,
+        width: Dimensions.get('window').width,
+        height:Dimensions.get('window').height,
     },
     text1: {
         fontSize: 30,
         color: '#551B26',
         fontWeight: 'bold',
         marginBottom: 40,
-        marginTop: 60,
+        marginTop: 130,
     },
     text2: { 
         fontSize: 12,
@@ -82,16 +139,15 @@ const styles = StyleSheet.create({
     link: {
         fontWeight: 'bold',
     },
-    label: {
-        color: 'grey',
+    instruction: {
+        color: '#551B26',
         fontSize: 15,
-        marginTop: 10,
-        textAlign: 'left',
-        marginLeft: -210,
+        marginBottom: 20,
+        paddingHorizontal: 25,
     },
     confirmButton: {
         top: 50,
     }
 });
 
-export default SignUpScreen;
+export default ConfirmEmailScreen;
