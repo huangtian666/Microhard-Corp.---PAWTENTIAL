@@ -1,1 +1,1 @@
-web: node server.js
+web: node email-server/server.js
