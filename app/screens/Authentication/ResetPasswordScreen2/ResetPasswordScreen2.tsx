@@ -90,7 +90,7 @@ const ResetPasswordScreen2 = () => {
 
     const onVerifyPressed = async () => {
         try {
-          const response = await fetch('http://192.168.101.29:3001/verify-code', {
+          const response = await fetch('https://pawtential-00eb93d0803f.herokuapp.com/verify-code', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
