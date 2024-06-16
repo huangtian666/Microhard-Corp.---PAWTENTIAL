@@ -5,6 +5,7 @@ import HomeScreen from './screens/home';
 import { FIREBASE_AUTH } from '@/FirebaseConfig';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Dimensions, StyleSheet } from 'react-native';
+import { appleAuth, AppleButton } from '@invertase/react-native-apple-authentication';
 
 const auth = FIREBASE_AUTH;
 

@@ -1,10 +1,10 @@
 import React from 'react';
 import CustomButton from '../CustomButton';
-import { signInWithCredential, GoogleAuthProvider } from 'firebase/auth';
+import { signInWithCredential, GoogleAuthProvider, OAuthProvider } from 'firebase/auth';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import { FIREBASE_AUTH } from '@/FirebaseConfig';
-
-
+import { appleAuth, AppleButton } from '@invertase/react-native-apple-authentication';
+import { Alert } from 'react-native';
 
 const SocialSignInButtons = () => {
     const auth = FIREBASE_AUTH;
@@ -27,11 +27,40 @@ const SocialSignInButtons = () => {
       return signInWithCredential(auth, googleCredential);
     }
 
-    const onSignInIOS = () => {
-      console.log('Sign in with IOS')
+    async function onAppleButtonPress() {
+
+      if (!appleAuth.isSupported) {
+        console.log('Apple Sign-in is not supported on this device');
+        Alert.alert('Error','Apple Sign-in is not supported on this device')
+        return;
     }
 
-    const onSignInGoogle = () => {
+      // Start the sign-in request
+      const appleAuthRequestResponse = await appleAuth.performRequest({
+        requestedOperation: appleAuth.Operation.LOGIN,
+        // As per the FAQ of react-native-apple-authentication, the name should come first in the following array.
+        // See: https://github.com/invertase/react-native-apple-authentication#faqs
+        requestedScopes: [appleAuth.Scope.FULL_NAME, appleAuth.Scope.EMAIL],
+      });
+    
+      // Ensure Apple returned a user identityToken
+      if (!appleAuthRequestResponse.identityToken) {
+        throw new Error('Apple Sign-In failed - no identify token returned');
+      }
+    
+      // Create a Firebase credential from the response
+      const { identityToken, nonce } = appleAuthRequestResponse;
+      const appleCredential = AppleAuthProvider.credential(identityToken, nonce);
+    
+      // Sign the user in with the credential
+      return signInWithCredential(auth,appleCredential);
+    }    
+
+    /*const onSignInIOS = () => {
+      onPress={() => onAppleButtonPress().then(() => console.log('Apple sign-in complete!'))};
+    }*/
+
+   const onSignInGoogle = () => {
       onGoogleButtonPress().then(() => console.log('Signed in with Google!'))
     }
 
@@ -39,7 +68,7 @@ const SocialSignInButtons = () => {
         <>
             <CustomButton 
                 text='Sign In with IOS' 
-                onPress={onSignInIOS} 
+                onPress={() => onAppleButtonPress().then(() => console.log('Apple sign-in complete!'))} 
                 bgColor='#D4D4D4'
                 fgColor='black'
                 />

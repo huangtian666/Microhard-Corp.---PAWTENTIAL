@@ -7,7 +7,6 @@ import SocialSignInButtons from '@/components/SocialSignInButtons';
 import { router } from 'expo-router';
 import { FIREBASE_AUTH} from '@/FirebaseConfig';
 import {signInWithEmailAndPassword, signInWithPopup, sendEmailVerification} from 'firebase/auth';
-//import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 const SignInScreen = () => {
     const[email, setEmail] = useState('');
