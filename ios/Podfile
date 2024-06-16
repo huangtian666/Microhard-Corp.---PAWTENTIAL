@@ -1,25 +1,6 @@
 require File.join(File.dirname(`node --print "require.resolve('expo/package.json')"`), "scripts/autolinking")
 require File.join(File.dirname(`node --print "require.resolve('react-native/package.json')"`), "scripts/react_native_pods")
 
-# Define the paths to check for native_modules.rb
-cli_platform_ios_path = File.join(__dir__, '../node_modules/@react-native-community/cli-platform-ios/native_modules')
-alt_cli_platform_ios_path = File.join(__dir__, '../node_modules/react-native/node_modules/@react-native-community/cli-platform-ios/native_modules')
-
-# Add debug output to help trace the issue
-puts "Checking for native_modules.rb in the following locations:"
-puts cli_platform_ios_path
-puts alt_cli_platform_ios_path
-
-if File.exist?(cli_platform_ios_path + ".rb")
-  puts "Requiring native_modules.rb from #{cli_platform_ios_path}"
-  require_relative cli_platform_ios_path
-elsif File.exist?(alt_cli_platform_ios_path + ".rb")
-  puts "Requiring native_modules.rb from #{alt_cli_platform_ios_path}"
-  require_relative alt_cli_platform_ios_path
-else
-  raise "Cannot find native_modules.rb in either location: #{cli_platform_ios_path} or #{alt_cli_platform_ios_path}"
-end
-
 require 'json'
 podfile_properties = JSON.parse(File.read(File.join(__dir__, 'Podfile.properties.json'))) rescue {}
 
@@ -36,12 +17,8 @@ target 'PAWTENTIAL' do
   use_expo_modules!
   config = use_native_modules!
 
-  if podfile_properties['ios.useFrameworks']
-    use_frameworks! :linkage => podfile_properties['ios.useFrameworks'].to_sym
-  end
-  if ENV['USE_FRAMEWORKS']
-    use_frameworks! :linkage => ENV['USE_FRAMEWORKS'].to_sym
-  end
+  use_frameworks! :linkage => podfile_properties['ios.useFrameworks'].to_sym if podfile_properties['ios.useFrameworks']
+  use_frameworks! :linkage => ENV['USE_FRAMEWORKS'].to_sym if ENV['USE_FRAMEWORKS']
 
   pod 'Firebase', :modular_headers => true
   pod 'FirebaseAuth', :modular_headers => true
@@ -54,6 +31,9 @@ target 'PAWTENTIAL' do
   pod 'nanopb', :modular_headers => true
   pod 'FirebaseSessions', :modular_headers => true
   pod 'FirebaseCoreExtension', :modular_headers => true
+
+  # Ensure RNGoogleSignin is added to the Podfile
+  pod 'RNGoogleSignin', :path => '../node_modules/@react-native-google-signin/google-signin', :modular_headers => true
 
 
   use_react_native!(

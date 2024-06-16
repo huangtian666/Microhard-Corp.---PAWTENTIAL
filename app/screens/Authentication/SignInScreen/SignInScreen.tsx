@@ -3,10 +3,11 @@ import Logo from '../../../../assets/images/PAWTENTIAL_icon_nobg.png'
 import React, {useState,} from 'react';
 import CustomInput from '../../../../components/CustomInput';
 import CustomButton from '../../../../components/CustomButton';
-import SocialSignInButtons from '@/components/SocialSignInButtons/SocialSignInButtons';
+import SocialSignInButtons from '@/components/SocialSignInButtons';
 import { router } from 'expo-router';
-import { FIREBASE_AUTH, GOOGLE_AUTH } from '@/FirebaseConfig';
+import { FIREBASE_AUTH} from '@/FirebaseConfig';
 import {signInWithEmailAndPassword, signInWithPopup, sendEmailVerification} from 'firebase/auth';
+//import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 const SignInScreen = () => {
     const[email, setEmail] = useState('');

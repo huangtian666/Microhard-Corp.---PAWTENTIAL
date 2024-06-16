@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import CustomButton from '../CustomButton';
 import { signInWithCredential, GoogleAuthProvider } from 'firebase/auth';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
@@ -9,25 +9,31 @@ import { FIREBASE_AUTH } from '@/FirebaseConfig';
 const SocialSignInButtons = () => {
     const auth = FIREBASE_AUTH;
 
+
+    GoogleSignin.configure({
+      webClientId: "446504650271-2pgknbfgaspvn961u1j4gl6dve395rks.apps.googleusercontent.com",
+    })
+
+    async function onGoogleButtonPress() {
+      // Check if your device supports Google Play
+      await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+      // Get the users ID token
+      const { idToken } = await GoogleSignin.signIn();
+    
+      // Create a Google credential with the token
+      const googleCredential = GoogleAuthProvider.credential(idToken);
+    
+      // Sign-in the user with the credential
+      return signInWithCredential(auth, googleCredential);
+    }
+
     const onSignInIOS = () => {
-        console.warn('Sign in with IOS')
+      console.log('Sign in with IOS')
     }
 
     const onSignInGoogle = () => {
-        console.warn('Sign in with Google')
+      onGoogleButtonPress().then(() => console.log('Signed in with Google!'))
     }
-
-    /*const onSignInGoogle = async () => {
-        try {
-          await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
-          const { idToken } = await GoogleSignin.signIn();
-          const googleCredential = GoogleAuthProvider.credential(idToken);
-          const userCredential = await signInWithCredential(auth, googleCredential);
-          console.log('User signed in with Google:', userCredential.user);
-        } catch (error) {
-          console.error('Error during Google sign-in:', error);
-        }
-      };*/
 
     return (
         <>

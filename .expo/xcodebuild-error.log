@@ -1,15 +1,3 @@
-2024-06-16 02:32:08.486 xcodebuild[42473:7748118]  DVTAssertions: Warning in DVTiOSFrameworks/DTDeviceKitBase/DTDKRemoteDeviceData.m:408
-Details:  (null) deviceType from 00008030-000A21860232802E was NULL when -platform called.
-Object:   <DTDKMobileDeviceToken: 0x1456d38e0>
-Method:   -platform
-Thread:   <NSThread: 0x600001534080>{number = 2, name = (null)}
-Please file a bug at https://feedbackassistant.apple.com with this warning message and any useful information you can provide.
-2024-06-16 02:32:08.738 xcodebuild[42473:7748157]  DVTAssertions: Warning in DVTiOSFrameworks/DTDeviceKitBase/DTDKRemoteDeviceData.m:408
-Details:  (null) deviceType from 00008030-000A21860232802E was NULL when -platform called.
-Object:   <DTDKMobileDeviceToken: 0x1456d38e0>
-Method:   -platform
-Thread:   <NSThread: 0x600001a8d6c0>{number = 7, name = (null)}
-Please file a bug at https://feedbackassistant.apple.com with this warning message and any useful information you can provide.
 --- xcodebuild: WARNING: Using the first of multiple matching destinations:
 { platform:iOS Simulator, id:5BCB0202-E627-4A58-8CF4-BB190C0B9515, OS:17.5, name:iPhone 15 Pro Max }
 { platform:iOS Simulator, id:5BCB0202-E627-4A58-8CF4-BB190C0B9515, OS:17.5, name:iPhone 15 Pro Max }
