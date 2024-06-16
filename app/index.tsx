@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import SignInScreen from './screens/Authentication/SignInScreen';
 import HomeScreen from './screens/home';
 import { FIREBASE_AUTH } from '@/FirebaseConfig';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Dimensions, StyleSheet } from 'react-native';
 
 const auth = FIREBASE_AUTH;
 
@@ -34,13 +36,27 @@ function Index() {
 
   if (!user) {
     return (
-        <SignInScreen/>
+      <SafeAreaView style={styles.container}>
+          <SignInScreen/>
+      </SafeAreaView>
     );
   }
 
   return (
-    <HomeScreen/>
+    <SafeAreaView>
+      <HomeScreen/>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+      flex: 1,
+      backgroundColor: '#FFF2CD',
+      width: Dimensions.get('window').width,
+      height:Dimensions.get('window').height,
+
+  }
+})
 
 export default Index;

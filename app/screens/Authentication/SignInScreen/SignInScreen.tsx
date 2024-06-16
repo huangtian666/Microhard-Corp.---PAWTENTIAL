@@ -114,13 +114,13 @@ const styles = StyleSheet.create({
     logo: {
         width: 430, //70% of the container's width
         height: 430,
-        marginTop:40,
+        marginTop: 40,
         marginBottom:15,
     },
     text: {
         fontSize: 35,
         color: '#551B26',
-        marginTop:50,
+        marginTop:"15%",
         fontWeight: 'bold',
     }
 });
