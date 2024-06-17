@@ -1,4 +1,4 @@
-import {SafeAreaView, Text, Image, StyleSheet, useWindowDimensions, ScrollView,Dimensions, Alert, View} from 'react-native';
+import {SafeAreaView, Text, Image, StyleSheet, useWindowDimensions, ScrollView,Dimensions, Alert, } from 'react-native';
 import Logo from '../../../../assets/images/PAWTENTIAL_icon_nobg.png'
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../../../components/CustomInput';
@@ -57,7 +57,8 @@ const SignInScreen = () => {
                     .then((userCredentials) => {
                         console.log('Signed in');
                         if(userCredentials.user?.emailVerified) {
-                          router.navigate('/screens/home');
+                          //router.navigate('/screens/home');
+                          router.navigate('/screens/BoardingQuestions/Question1')
                       } else {
                           Alert.alert('Email not verified', 'please verify your email')
                           sendEmailVerification(userCredentials.user).then(() => {

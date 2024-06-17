@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import SignInScreen from './screens/Authentication/SignInScreen';
-import HomeScreen from './screens/home';
+import HomeScreen from './screens/Home';
 import { FIREBASE_AUTH } from '@/FirebaseConfig';
 import { appleAuth  } from '@invertase/react-native-apple-authentication';
 

@@ -3,14 +3,14 @@ const nodemailer = require('nodemailer');
 const bodyParser = require('body-parser');
 const admin = require('firebase-admin');
 const serviceAccount = require('../serviceKey.json');
-//const {HttpsProxyAgent} = require('https-proxy-agent');
+const {HttpsProxyAgent} = require('https-proxy-agent');
 
-//const proxy = 'http://127.0.0.1:7890';
-//const agent = new HttpsProxyAgent(proxy);
+const proxy = 'http://127.0.0.1:7890';
+const agent = new HttpsProxyAgent(proxy);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  //httpAgent: agent,
+  httpAgent: agent,
 })
 
 const app = express();
