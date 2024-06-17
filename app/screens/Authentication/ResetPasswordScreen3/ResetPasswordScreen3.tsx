@@ -32,7 +32,7 @@ const ResetPasswordScreen3 = () => {
             return;
         }
         try {
-            const response = await fetch('https://pawtential-00eb93d0803f.herokuapp.com/reset-password', {
+            const response = await fetch('http://192.168.101.29:3001/reset-password', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

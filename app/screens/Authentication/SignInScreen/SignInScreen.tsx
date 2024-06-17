@@ -1,15 +1,15 @@
-import {SafeAreaView, Text, Image, StyleSheet, useWindowDimensions, ScrollView,Dimensions, Alert} from 'react-native';
+import {SafeAreaView, Text, Image, StyleSheet, useWindowDimensions, ScrollView,Dimensions, Alert, View} from 'react-native';
 import Logo from '../../../../assets/images/PAWTENTIAL_icon_nobg.png'
-import React, {useState,} from 'react';
+import React, {useState, useEffect} from 'react';
 import CustomInput from '../../../../components/CustomInput';
 import CustomButton from '../../../../components/CustomButton';
 import SocialSignInButtons from '@/components/SocialSignInButtons';
 import { router } from 'expo-router';
 import { FIREBASE_AUTH} from '@/FirebaseConfig';
-import {signInWithEmailAndPassword, signInWithPopup, sendEmailVerification} from 'firebase/auth';
+import {signInWithEmailAndPassword, sendEmailVerification} from 'firebase/auth';
 
 const SignInScreen = () => {
-    const[email, setEmail] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const auth = FIREBASE_AUTH;
     //useState hook is used to create a state variable inputValue &
@@ -18,8 +18,9 @@ const SignInScreen = () => {
 
     const {height} = useWindowDimensions();
 
+
     return (
-        <ScrollView >
+        <ScrollView>
             <SafeAreaView style={styles.container}>
                 <Text style ={styles.text}>PAWTENTIAL!</Text>
                 <Image 
@@ -27,8 +28,12 @@ const SignInScreen = () => {
                     style={[styles.logo,
                     {height: height * 0.3}]}
                     />
-                <CustomInput placeholder='Email' value={email} 
-                setValue = {setEmail} placeholderTextColor='gray'/>
+                <CustomInput
+                    placeholder="Email"
+                    value={email}
+                    setValue={setEmail}
+                    placeholderTextColor="gray"
+                />
                 <CustomInput placeholder='Password' value={password} 
                 setValue = {setPassword} secureTextEntry={true} placeholderTextColor='gray'/>
                 <CustomButton 
@@ -56,9 +61,6 @@ const SignInScreen = () => {
                       } else {
                           Alert.alert('Email not verified', 'please verify your email')
                           sendEmailVerification(userCredentials.user).then(() => {
-                            //Alert.alert('Verification Email Sent', 
-                            //'Please check your email to verify your account.');
-                            // Navigate to a screen that tells the user to verify their email
                             router.navigate('/screens/Authentication/ConfirmEmail');
                         })
                       } 
@@ -95,9 +97,9 @@ const SignInScreen = () => {
                     onPress={ ()=> {
                       router.navigate('/screens/Authentication/SignUpScreen')}} 
                       type='TERTIARY'
-                    />
+                  />
             </SafeAreaView>
-            </ScrollView>
+          </ScrollView>
         ); 
 }
 
@@ -108,10 +110,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFF2CD',
         width: Dimensions.get('window').width,
         height:Dimensions.get('window').height,
-
     },
     logo: {
-        width: 430, //70% of the container's width
+        width: 430,
         height: 430,
         marginTop: 40,
         marginBottom:15,

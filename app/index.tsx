@@ -3,9 +3,7 @@ import React, { useState, useEffect } from 'react';
 import SignInScreen from './screens/Authentication/SignInScreen';
 import HomeScreen from './screens/home';
 import { FIREBASE_AUTH } from '@/FirebaseConfig';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Dimensions, StyleSheet } from 'react-native';
-import { appleAuth, AppleButton } from '@invertase/react-native-apple-authentication';
+import { appleAuth  } from '@invertase/react-native-apple-authentication';
 
 const auth = FIREBASE_AUTH;
 
@@ -33,31 +31,31 @@ function Index() {
     return subscriber; // unsubscribe on unmount
   }, []);
 
+  if (appleAuth.isSupported) {
+    useEffect(() => {
+      // onCredentialRevoked returns a function that will remove the event listener.
+      // useEffect will call this function when the component unmounts
+      return appleAuth.onCredentialRevoked(async () => {
+        console.warn('If this function executes, User Credentials have been Revoked');
+      });
+    }, []); // passing in an empty array as the second argument 
+            //ensures this is only ran once when component mounts initially.
+  }
+
+
+
+
   if (initializing) return null;
 
   if (!user) {
     return (
-      <SafeAreaView style={styles.container}>
           <SignInScreen/>
-      </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView>
       <HomeScreen/>
-    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-      flex: 1,
-      backgroundColor: '#FFF2CD',
-      width: Dimensions.get('window').width,
-      height:Dimensions.get('window').height,
-
-  }
-})
 
 export default Index;

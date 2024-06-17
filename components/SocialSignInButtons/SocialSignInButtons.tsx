@@ -1,9 +1,9 @@
 import React from 'react';
 import CustomButton from '../CustomButton';
-import { signInWithCredential, GoogleAuthProvider, OAuthProvider } from 'firebase/auth';
-import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import { signInWithCredential, GoogleAuthProvider} from 'firebase/auth';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { FIREBASE_AUTH } from '@/FirebaseConfig';
-import { appleAuth, AppleButton } from '@invertase/react-native-apple-authentication';
+import { appleAuth  } from '@invertase/react-native-apple-authentication';
 import { Alert } from 'react-native';
 
 const SocialSignInButtons = () => {

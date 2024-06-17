@@ -37,7 +37,7 @@ const ResetPasswordScreen1 = () => {
     
             console.log(`Sending verification code to ${cleanedEmail}`);
     
-            const response = await fetch('https://pawtential-00eb93d0803f.herokuapp.com/send-verification-email', {
+            const response = await fetch('http://192.168.101.29:3001/send-verification-email', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

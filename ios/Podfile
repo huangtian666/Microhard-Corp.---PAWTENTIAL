@@ -35,6 +35,7 @@ target 'PAWTENTIAL' do
   # Ensure RNGoogleSignin is added to the Podfile
   pod 'RNGoogleSignin', :path => '../node_modules/@react-native-google-signin/google-signin', :modular_headers => true
 
+  pod 'Firebase/Crashlytics', '10.25.0'
 
   use_react_native!(
     :path => config[:reactNativePath],

@@ -21,9 +21,9 @@ export default function HomeScreen() {
     console.log("meow")
   }
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
     signOut(auth).then(() => {
-            console.warn('User signed out');
+            console.log('User signed out');
             router.push('/screens/Authentication/SignInScreen');
         })
         .catch(error => {
