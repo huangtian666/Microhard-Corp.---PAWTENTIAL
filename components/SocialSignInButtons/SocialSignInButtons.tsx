@@ -5,6 +5,7 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { FIREBASE_AUTH } from '@/FirebaseConfig';
 import { appleAuth  } from '@invertase/react-native-apple-authentication';
 import { Alert } from 'react-native';
+import {router} from 'expo-router';
 
 const SocialSignInButtons = () => {
     const auth = FIREBASE_AUTH;
@@ -61,14 +62,23 @@ const SocialSignInButtons = () => {
     }*/
 
    const onSignInGoogle = () => {
-      onGoogleButtonPress().then(() => console.log('Signed in with Google!'))
+      onGoogleButtonPress().then(() => 
+        console.log('Signed in with Google!'))
+      .then(() => router.push('/screens/Home'))
+
+    }
+
+    const onSignInIOS = () => {
+        onAppleButtonPress().then(() =>
+          console.log('Apple sign-in complete!')
+        ).then(() => router.push('/screens/Home'))
     }
 
     return (
         <>
             <CustomButton 
                 text='Sign In with IOS' 
-                onPress={() => onAppleButtonPress().then(() => console.log('Apple sign-in complete!'))} 
+                onPress={onSignInIOS} 
                 bgColor='#D4D4D4'
                 fgColor='black'
                 />

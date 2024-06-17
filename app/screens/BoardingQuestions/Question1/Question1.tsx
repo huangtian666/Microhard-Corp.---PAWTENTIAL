@@ -25,6 +25,8 @@ const Question1 = () => {
         if (username.includes(' ')) {
             Alert.alert('Invalid Username', 'Your username should not contain any space')
         }
+
+        router.push('/screens/BoardingQuestions/Question2')
     };
     
     return (
