@@ -92,7 +92,7 @@ const SignUpScreen = () => {
     const {height} = useWindowDimensions();
     
     return (
-        <ScrollView>
+        <ScrollView contentContainerStyle={{flexGrow: 1, backgroundColor: '#FFF2CD'}}>
             <View style={styles.container}>
                 <Text style ={styles.text1}>Create Your Account!</Text>
                 <Text style = {styles.label}>Email</Text>

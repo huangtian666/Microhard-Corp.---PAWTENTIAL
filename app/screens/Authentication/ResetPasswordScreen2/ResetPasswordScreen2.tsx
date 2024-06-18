@@ -161,7 +161,7 @@ const ResetPasswordScreen2 = () => {
     }
 
     return (
-        <ScrollView>
+        <ScrollView contentContainerStyle={{flexGrow: 1, backgroundColor: '#FFF2CD'}}>
             <View style={styles.container}>
                 <Text style ={styles.text}>Reset Your Password</Text>
                 <Text style ={styles.reminder}>We have just sent you an email about 
@@ -193,7 +193,6 @@ const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
         flex: 1,
-        backgroundColor:'#FFF2CD',
         width: Dimensions.get('window').width,
         height:Dimensions.get('window').height,
     },
