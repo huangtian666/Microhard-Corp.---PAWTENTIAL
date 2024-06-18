@@ -98,6 +98,8 @@ const SignInScreen = () => {
                     onPress={ ()=> {
                       router.navigate('/screens/Authentication/SignUpScreen')}} 
                       type='TERTIARY'
+
+                    style = {styles.createAccount}
                   />
             </SafeAreaView>
           </ScrollView>
@@ -113,16 +115,18 @@ const styles = StyleSheet.create({
         height:Dimensions.get('window').height,
     },
     logo: {
-        width: 430,
-        height: 430,
-        marginTop: 40,
-        marginBottom:15,
+        width: '95%',
+        height: '95%',
+        marginTop:'10%',
     },
     text: {
         fontSize: 35,
         color: '#551B26',
         marginTop:"15%",
         fontWeight: 'bold',
+    },
+    createAccount : {
+      marginBottom: '5%'
     }
 });
 

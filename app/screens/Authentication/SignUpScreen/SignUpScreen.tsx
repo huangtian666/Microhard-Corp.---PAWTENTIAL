@@ -160,7 +160,8 @@ const styles = StyleSheet.create({
         color: 'grey',
         fontSize: 15,
         marginTop: 10,
-        textAlign: 'left',
+        paddingLeft: '8%', // Responsive padding from the left
+        alignSelf: 'flex-start',
     }
 });
 
