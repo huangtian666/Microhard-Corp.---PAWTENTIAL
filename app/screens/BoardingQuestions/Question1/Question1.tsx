@@ -30,7 +30,7 @@ const Question1 = () => {
     };
     
     return (
-        <ScrollView>
+        <ScrollView contentContainerStyle={{flexGrow: 1, backgroundColor: '#FFF2CD'}}>
             <SafeAreaView style={styles.container}>
                 <Text style ={styles.text1}>Create Your Username!</Text>
                 <Text style = {styles.label}>Username</Text>
@@ -58,9 +58,7 @@ const Question1 = () => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         alignItems: 'center',
-        backgroundColor: '#FFF2CD',
         width: Dimensions.get('window').width,
         height:Dimensions.get('window').height,
     },

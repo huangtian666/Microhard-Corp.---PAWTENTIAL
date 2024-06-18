@@ -20,7 +20,7 @@ const SignInScreen = () => {
 
 
     return (
-        <ScrollView>
+        <ScrollView contentContainerStyle={{flexGrow: 1, backgroundColor: '#FFF2CD', paddingBottom: 10}}>
             <SafeAreaView style={styles.container}>
                 <Text style ={styles.text}>PAWTENTIAL!</Text>
                 <Image 
@@ -78,7 +78,7 @@ const SignInScreen = () => {
                                 Alert.alert('Login Error', 'Invalid email entered.');
                                 break;
                               case 'auth/invalid-credential':
-                                Alert.alert('Login Error', 'Invalid credential');
+                                Alert.alert('Login Error', 'Incorrect email or password.');
                                 break;
                               default:
                                 Alert.alert('Login Error', error.message);
@@ -108,9 +108,7 @@ const SignInScreen = () => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         alignItems: 'center',
-        backgroundColor: '#FFF2CD',
         width: Dimensions.get('window').width,
         height:Dimensions.get('window').height,
     },
