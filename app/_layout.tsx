@@ -1,20 +1,21 @@
 import React from 'react';
 import { Stack } from 'expo-router';
+import HomeScreen from './screens/Home';
+import { Router, Route } from '@react-navigation/native';
 
 const RootLayout = () => {
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="index" />
-      <Stack.Screen name="screens/Authentication/SignInScreen" />
-      <Stack.Screen name="screens/Authentication/SignUpScreen" />
-      <Stack.Screen name="screens/Authentication/ConfirmEmailScreen" />
-      <Stack.Screen name="screens/Authentication/ResetPasswordScreen1" />
-      <Stack.Screen name="screens/Authentication/ResetPasswordScreen2" />
-      <Stack.Screen name="screens/Authentication/ResetPasswordScreen3" />
-      <Stack.Screen name="screens/WelcomeScreen/WelcomeScreen" />
-      <Stack.Screen name="screens/BoardingQuestions/Question1" />
-      <Stack.Screen name="screens/BoardingQuestions/Question2" />
-      <Stack.Screen name="screens/Home/HomeScreen" />
+      <Stack.Screen name="screens/Authentication/SignInScreen/index" />
+      <Stack.Screen name="screens/Authentication/SignUpScreen/index" />
+      <Stack.Screen name="screens/Authentication/ConfirmEmail/index" />
+      <Stack.Screen name="screens/Authentication/ResetPasswordScreen1/index" />
+      <Stack.Screen name="screens/Authentication/ResetPasswordScreen2/index" />
+      <Stack.Screen name="screens/Authentication/ResetPasswordScreen3/index" />
+      <Stack.Screen name="screens/WelcomeScreen/index" />
+      <Stack.Screen name="screens/BoardingQuestions/Question1/index" />
+      <Stack.Screen name="screens/BoardingQuestions/Question2/index" />
+      <Stack.Screen name="screens/Home/index" />
     </Stack>
   );
 };
