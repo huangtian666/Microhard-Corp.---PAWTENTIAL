@@ -84,7 +84,7 @@ const ResetPasswordScreen1 = () => {
                         type='TERTIARY'
                     />
             </View>
-            </ScrollView>
+        </ScrollView>
         ); 
 }
 

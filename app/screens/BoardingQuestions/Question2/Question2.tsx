@@ -84,11 +84,10 @@ const styles = StyleSheet.create({
     image: {
         width:'90%',
         height: '40%',
-        marginBottom: '5%'
     },
     paws: {
         width:'100%',
-        height: '25%',
+        height: '30%',
     }
 });
 

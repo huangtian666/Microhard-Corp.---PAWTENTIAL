@@ -29,13 +29,6 @@ const SocialSignInButtons = () => {
     }
 
     async function onAppleButtonPress() {
-
-      if (!appleAuth.isSupported) {
-        console.log('Apple Sign-in is not supported on this device');
-        Alert.alert('Error','Apple Sign-in is not supported on this device')
-        return;
-    }
-
       // Start the sign-in request
       const appleAuthRequestResponse = await appleAuth.performRequest({
         requestedOperation: appleAuth.Operation.LOGIN,
@@ -69,6 +62,11 @@ const SocialSignInButtons = () => {
     }
 
     const onSignInIOS = () => {
+      if (!appleAuth.isSupported) {
+        console.log('Apple Sign-in is not supported on this device');
+        Alert.alert('Error','Apple Sign-in is not supported on this device')
+        return;
+    } 
         onAppleButtonPress().then(() =>
           console.log('Apple sign-in complete!')
         ).then(() => router.push('/screens/Home'))

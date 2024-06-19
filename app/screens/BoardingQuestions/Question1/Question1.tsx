@@ -1,15 +1,36 @@
-import {SafeAreaView, Text, Image, StyleSheet, ScrollView, Dimensions, Alert} from 'react-native';
-import React, {useState} from 'react';
+import {SafeAreaView, Text, Image, StyleSheet, ScrollView, Dimensions, Alert, Animated} from 'react-native';
+import React, {useState, useEffect, useRef} from 'react';
 import CustomInput from '../../../../components/CustomInput';
 import CustomButton from '../../../../components/CustomButton';
 import {router} from 'expo-router';
 import { FIREBASE_AUTH } from '@/FirebaseConfig';
-import Student from '../../../../assets/images/students.png'
+import Student from '../../../../assets/images/students.png';
+import Hello from '../../../../assets/images/hello.png';
  
 const Question1 = () => {
     const auth = FIREBASE_AUTH;
     const MIN_USERNAME_LENGTH = 2;
     const [username, setUsername] = useState(''); // Track email verification status
+    const [showImage, setshowImage] = useState(false);
+
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+        if (showImage) {
+            Animated.timing(fadeAnim, {
+                toValue: 1,
+                duration: 800,
+                useNativeDriver: true,
+            }).start();
+        } else {
+            fadeAnim.setValue(0);
+        }
+    }, [showImage]);
+
+    const handleTextChange = (text) => {
+        setUsername(text);
+        setshowImage(text.trim().length > 0);
+    }
 
     const onNextPressed = async () => {
         console.log('Next pressed');
@@ -30,26 +51,27 @@ const Question1 = () => {
     };
     
     return (
-        <ScrollView contentContainerStyle={{flexGrow: 1, backgroundColor: '#FFF2CD'}}>
+        <ScrollView contentContainerStyle={{flexGrow: 1, backgroundColor: '#FFF2CD', paddingBottom: 15}}>
             <SafeAreaView style={styles.container}>
                 <Text style ={styles.text1}>Create Your Username!</Text>
                 <Text style = {styles.label}>Username</Text>
                 <CustomInput placeholder='Username' value={username} 
-                setValue = {setUsername} placeholderTextColor='gray'/>
+                setValue = {handleTextChange} placeholderTextColor='gray'/>
                 <CustomButton  
                     text='Next' 
                     onPress={ onNextPressed }
-                    />
-                <CustomButton 
-                    text= "Back to Sign In" 
-                    onPress={ ()=> { 
-                        console.log('Back to Sign In') 
-                        router.navigate('/screens/Authentication/SignInScreen')}} 
-                        type='TERTIARY'
-                    />
+                />
+                {showImage && (
+                    <Animated.View style={{ opacity: fadeAnim }}>
+                        <Image
+                        source={Hello}
+                        style={styles.hello}
+                        />
+                    </Animated.View>
+                )}
                 <Image
                     source = {Student}
-                    style = {styles.image}
+                    style = {styles.students}
                 />    
             </SafeAreaView>
         </ScrollView>
@@ -66,8 +88,8 @@ const styles = StyleSheet.create({
         fontSize: 30,
         color: '#551B26',
         fontWeight: 'bold',
-        marginBottom: 40,
-        marginTop: '20%',
+        marginBottom: '15%',
+        marginTop: '15%',
     },
     label: {
         color: 'grey',
@@ -76,11 +98,17 @@ const styles = StyleSheet.create({
         paddingLeft: '8%', // Responsive padding from the left
         alignSelf: 'flex-start',
     },
-    image: {
-        marginTop: '50%',
+    students: {
+        position: 'absolute',
+        marginTop: 650,
         marginBottom:0,
         width: '100%',
         height: '35%',
+    },
+    hello: {
+        height: 140,
+        marginTop: '20%',
+        resizeMode: 'contain',
     }
 });
 

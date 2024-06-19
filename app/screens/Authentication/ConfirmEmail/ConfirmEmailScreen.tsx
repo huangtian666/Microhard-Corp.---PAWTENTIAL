@@ -1,10 +1,11 @@
-import {View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, Dimensions, Alert} from 'react-native';
+import { Text, Image, StyleSheet, useWindowDimensions, ScrollView, Dimensions, Alert} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../../../components/CustomInput';
 import CustomButton from '../../../../components/CustomButton';
 import {router} from 'expo-router';
 import { FIREBASE_AUTH } from '@/FirebaseConfig';
 import {sendEmailVerification} from 'firebase/auth';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ConfirmEmailScreen = () => {
     const auth = FIREBASE_AUTH;
@@ -80,7 +81,7 @@ const ConfirmEmailScreen = () => {
     
     return (
         <ScrollView contentContainerStyle={{flexGrow: 1, backgroundColor: '#FFF2CD'}}>
-            <View style={styles.container}>
+            <SafeAreaView style={styles.container}>
                 <Text style ={styles.text1}>Confirm Your Email!</Text>
                 <Text style = {styles.instruction}>Please check your email to verify your account.{'\n'}
                 If you haven't received the verification email, click 'Resend Code' to receive a new one.{'\n'}
@@ -109,7 +110,7 @@ const ConfirmEmailScreen = () => {
                         router.navigate('/screens/Authentication/SignInScreen')}} 
                         type='TERTIARY'
                     />
-            </View>
+            </SafeAreaView>
             </ScrollView>
         ); 
 }
@@ -126,8 +127,8 @@ const styles = StyleSheet.create({
         fontSize: 30,
         color: '#551B26',
         fontWeight: 'bold',
-        marginBottom: 40,
-        marginTop: 130,
+        marginBottom: '15%',
+        marginTop: '15%',
     },
     text2: { 
         fontSize: 12,

@@ -1,4 +1,4 @@
-import {View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, Alert,Dimensions} from 'react-native';
+import {SafeAreaView, Text, Image, StyleSheet, useWindowDimensions, ScrollView, Alert,Dimensions} from 'react-native';
 import React, {useState} from 'react';
 import CustomInput from '../../../../components/CustomInput';
 import CustomButton from '../../../../components/CustomButton';
@@ -93,7 +93,7 @@ const SignUpScreen = () => {
     
     return (
         <ScrollView contentContainerStyle={{flexGrow: 1, backgroundColor: '#FFF2CD'}}>
-            <View style={styles.container}>
+            <SafeAreaView style={styles.container}>
                 <Text style ={styles.text1}>Create Your Account!</Text>
                 <Text style = {styles.label}>Email</Text>
                 <CustomInput placeholder='xxxxxx@email.com' value={email} 
@@ -121,7 +121,7 @@ const SignUpScreen = () => {
                     router.navigate('/screens/Authentication/SignInScreen')}} 
                     type='TERTIARY'
                     />
-            </View>
+            </SafeAreaView>
             </ScrollView>
         ); 
 }
@@ -137,8 +137,8 @@ const styles = StyleSheet.create({
     text1: {
         fontSize: 30,
         color: '#551B26',
-        marginTop:130,
-        marginBottom: 40,
+        marginTop:'15%',
+        marginBottom: '10%',
         fontWeight: 'bold',
     },
     text2: { 
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         paddingLeft: '8%', // Responsive padding from the left
         alignSelf: 'flex-start',
-    }
+    },
 });
 
 export default SignUpScreen;
