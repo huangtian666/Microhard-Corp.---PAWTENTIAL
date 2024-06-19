@@ -3,15 +3,18 @@ import React, {useState, useEffect, useRef} from 'react';
 import CustomInput from '../../../../components/CustomInput';
 import CustomButton from '../../../../components/CustomButton';
 import {router} from 'expo-router';
-import { FIREBASE_AUTH } from '@/FirebaseConfig';
+import { FIREBASE_AUTH, FIREBASE_DB } from '@/FirebaseConfig';
 import Student from '../../../../assets/images/students.png';
 import Hello from '../../../../assets/images/hello.png';
+import { saveUserData } from '@/FirestoreService';
  
 const Question1 = () => {
     const auth = FIREBASE_AUTH;
+    const db = FIREBASE_DB;
     const MIN_USERNAME_LENGTH = 2;
     const [username, setUsername] = useState(''); // Track email verification status
     const [showImage, setshowImage] = useState(false);
+    const cleanedUsername = username.trim();
 
     const fadeAnim = useRef(new Animated.Value(0)).current;
 
@@ -35,19 +38,31 @@ const Question1 = () => {
     const onNextPressed = async () => {
         console.log('Next pressed');
 
-        if (username.trim() === '') {
+        if (cleanedUsername === '') {
             Alert.alert('Missing Username', 'Please enter a username')
             return;
         }  
-        if (username.length <= MIN_USERNAME_LENGTH) {
+        if (cleanedUsername.length <= MIN_USERNAME_LENGTH) {
             Alert.alert('Invalid Username', 'Your username must be more than 2 characters')
             return;
         }
-        if (username.includes(' ')) {
+        if (cleanedUsername.includes(' ')) {
             Alert.alert('Invalid Username', 'Your username should not contain any space')
         }
 
-        router.push('/screens/BoardingQuestions/Question2')
+        const user = auth.currentUser;
+        if (user) {
+          await saveUserData(user.uid, { cleanedUsername });
+          router.push('/screens/BoardingQuestions/Question2');
+        } else {
+          Alert.alert('Error', 'User not authenticated');
+        }
+    };
+
+
+    const onPreviousPressed = async () => {
+        console.log('Previous Page') 
+        router.push('/screens/WelcomeScreen')
     };
     
     return (
@@ -61,6 +76,11 @@ const Question1 = () => {
                     text='Next' 
                     onPress={ onNextPressed }
                 />
+                <CustomButton 
+                    text= "Previous Page" 
+                    onPress={onPreviousPressed} 
+                    type='TERTIARY'
+                /> 
                 {showImage && (
                     <Animated.View style={{ opacity: fadeAnim }}>
                         <Image

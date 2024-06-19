@@ -7,7 +7,6 @@ import Welcome from '../../../assets/images/welcome.png';
  
 const WelcomeScreen = () => {
     const auth = FIREBASE_AUTH;
-    const MIN_USERNAME_LENGTH = 2;
 
     const onNextPressed = async () => {
         console.log('Next pressed');

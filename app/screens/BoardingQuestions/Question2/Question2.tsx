@@ -5,28 +5,49 @@ import CustomButton from '../../../../components/CustomButton';
 import {router} from 'expo-router';
 import { FIREBASE_AUTH } from '@/FirebaseConfig';
 import Dog from '../../../../assets/images/dogwithframe.png';
-import Paws from '../../../../assets/images/paws.png'
+import Paws from '../../../../assets/images/paws.png';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { saveUserData } from '@/FirestoreService';
  
 const Question2 = () => {
     const auth = FIREBASE_AUTH;
     const MIN_USERNAME_LENGTH = 2;
     const [petname, setPetname] = useState(''); // Track email verification status
+    const [isLoading, setIsLoading] = useState(false);
+    const cleanedPetname = petname.trim();
 
     const onStartPressed = async () => {
         console.log('Start pressed');
 
-        if (petname.trim() === '') {
+        if (cleanedPetname === '') {
             Alert.alert('Missing Username', 'Please enter a username')
             return;
         }  
-        if (petname.length <= MIN_USERNAME_LENGTH) {
+        if (cleanedPetname.length <= MIN_USERNAME_LENGTH) {
             Alert.alert('Invalid Username', 'Your username must be more than 2 characters')
             return;
         }
-        if (petname.includes(' ')) {
+        if (cleanedPetname.includes(' ')) {
             Alert.alert('Invalid Username', 'Your username should not contain any space')
         }
-    };
+        setIsLoading(true); // Start loading
+
+        const user = auth.currentUser;
+        if (user) {
+            try {
+                await saveUserData(user.uid, { cleanedPetname });
+                await AsyncStorage.setItem('onboardingComplete', 'true');
+                setIsLoading(false); // End loading
+                router.push('/screens/Home');
+            } catch (error) {
+                setIsLoading(false); // End loading
+                Alert.alert('Error', 'Failed to save user data');
+            }
+        } else {
+            setIsLoading(false); // End loading
+            Alert.alert('Error', 'User not authenticated');
+        }
+    }
 
     const onPreviousPressed = async () => {
         console.log('Previous Page') 
