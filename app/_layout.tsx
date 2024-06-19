@@ -16,6 +16,10 @@ const RootLayout = () => {
       <Stack.Screen name="screens/BoardingQuestions/Question1/index" />
       <Stack.Screen name="screens/BoardingQuestions/Question2/index" />
       <Stack.Screen name="screens/Home/index" />
+      <Stack.Screen name="screens/ToDoList/index" />
+      <Stack.Screen name="screens/Timer/index" />
+      <Stack.Screen name="screens/WhiteNoise/index" />
+      <Stack.Screen name="screens/PawSpace/index" />
     </Stack>
   );
 };
