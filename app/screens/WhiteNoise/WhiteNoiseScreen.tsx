@@ -5,7 +5,7 @@ import React, {useState} from 'react';
 const WhiteNoiseScreen = () => {
    
     return (
-        <ScrollView contentContainerStyle={{paddingBottom: 20, backgroundColor: '#FFF2CD'}} >
+        <ScrollView contentContainerStyle={{flex: 1, paddingBottom: 20, backgroundColor: '#FFF2CD'}} >
             <SafeAreaView style={styles.container}>
                 <Text style ={styles.text1}>White Noise</Text>   
             </SafeAreaView>
@@ -16,8 +16,6 @@ const WhiteNoiseScreen = () => {
 const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
-        width: Dimensions.get('window').width,
-        height:Dimensions.get('window').height,
     },
     text1: {
         fontSize: 30,

@@ -1,11 +1,9 @@
 import React from 'react';
-import { Stack } from 'expo-router';
-import HomeScreen from './screens/Home';
-import { Router, Route } from '@react-navigation/native';
+import { Stack} from 'expo-router';
 
 const RootLayout = () => {
   return (
-    <Stack screenOptions={{ headerShown: false }}>
+      <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="screens/Authentication/SignInScreen/index" />
       <Stack.Screen name="screens/Authentication/SignUpScreen/index" />
       <Stack.Screen name="screens/Authentication/ConfirmEmail/index" />
@@ -15,12 +13,13 @@ const RootLayout = () => {
       <Stack.Screen name="screens/WelcomeScreen/index" />
       <Stack.Screen name="screens/BoardingQuestions/Question1/index" />
       <Stack.Screen name="screens/BoardingQuestions/Question2/index" />
+      <Stack.Screen name="screens/NavigationBar" />
       <Stack.Screen name="screens/Home/index" />
       <Stack.Screen name="screens/ToDoList/index" />
       <Stack.Screen name="screens/Timer/index" />
       <Stack.Screen name="screens/WhiteNoise/index" />
       <Stack.Screen name="screens/PawSpace/index" />
-    </Stack>
+      </Stack>
   );
 };
 

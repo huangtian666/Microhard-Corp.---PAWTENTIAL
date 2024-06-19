@@ -50,14 +50,14 @@ const SignInScreen = () => {
       if(userCredentials.user?.emailVerified) {
         const hasCompletedOnboarding = await checkOnboardingStatus();
         if (hasCompletedOnboarding) {
-            router.push('/screens/Home');
+            router.push('/screens/NavigationBar');
         } else {
             router.push('/screens/WelcomeScreen');
         }
     } else {
         Alert.alert('Email not verified', 'please verify your email')
         sendEmailVerification(userCredentials.user).then(() => {
-          router.navigate('/screens/Authentication/ConfirmEmail');
+          router.push('/screens/Authentication/ConfirmEmail');
       })
     } 
   })

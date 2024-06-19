@@ -4,6 +4,7 @@ import SignInScreen from './screens/Authentication/SignInScreen';
 import HomeScreen from './screens/Home';
 import { FIREBASE_AUTH } from '@/FirebaseConfig';
 import { appleAuth  } from '@invertase/react-native-apple-authentication';
+import NavigationBar from '@/app/screens/NavigationBar';
 
 const auth = FIREBASE_AUTH;
 
@@ -54,7 +55,7 @@ function Index() {
   }
 
   return (
-      <HomeScreen/>
+      <NavigationBar/>
   );
 }
 
