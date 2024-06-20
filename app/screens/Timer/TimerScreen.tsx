@@ -5,7 +5,7 @@ import React, {useState} from 'react';
 const Timer = () => {
    
     return (
-        <ScrollView contentContainerStyle={{paddingBottom: 20, backgroundColor: '#FFF2CD'}} >
+        <ScrollView contentContainerStyle={{paddingBottom: 20, backgroundColor: 'white'}} >
             <SafeAreaView style={styles.container}>
                 <Text style ={styles.text1}>Timer</Text>   
             </SafeAreaView>

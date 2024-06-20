@@ -7,7 +7,7 @@ import ToDoList from '@/app/screens/ToDoList';
 import Timer from '@/app/screens/Timer';
 import WhiteNoise from '@/app/screens/WhiteNoise';
 import PawSpace from '@/app/screens/PawSpace';
-import {View, StyleSheet} from 'react-native'
+
 
 const Tab = createBottomTabNavigator();
 
@@ -31,7 +31,7 @@ const NavigationBar = () => {
                 iconName = focused ? 'timer' : 'timer-outline';
                 break;
                 case 'WhiteNoise':
-                iconName = focused ? 'volume-high' : 'volume-mute-outline';
+                iconName = focused ? 'musical-notes' : 'musical-note-outline';
                 break;
                 case 'PawSpace':
                 iconName = focused ? 'paw' : 'paw-outline';
@@ -48,9 +48,9 @@ const NavigationBar = () => {
           heigh:70,
           paddingBottom: 17,
           paddingTop: 8,
-          paddingHorizontal: 7,
-          borderRadius: 25,  
+          paddingHorizontal: 7, 
           backgroundColor: 'white',
+          borderTopWidth: 2,
         },
         tabBarLabelStyle: { 
           fontSize: 12, 

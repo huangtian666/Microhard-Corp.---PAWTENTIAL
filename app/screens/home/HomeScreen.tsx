@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     flex: 1,//make everything(words, images) occupy the entire page
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white',
     //flexDirection: "row"
   },// flexbox 
   text: {

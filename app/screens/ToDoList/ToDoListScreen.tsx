@@ -5,7 +5,7 @@ import React, {useState} from 'react';
 const ToDoList = () => {
    
     return (
-        <ScrollView contentContainerStyle={{paddingBottom: 20, backgroundColor: '#FFF2CD'}} >
+        <ScrollView contentContainerStyle={{paddingBottom: 20, backgroundColor: 'white'}} >
             <SafeAreaView style={styles.container}>
                 <Text style ={styles.text1}>To-Do List</Text>   
             </SafeAreaView>
