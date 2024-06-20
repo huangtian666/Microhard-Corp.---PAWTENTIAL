@@ -56,7 +56,9 @@ const ToDoList = () => {
               style={styles.button}
               onPress={() => setShowFullCalendar(!showFullCalendar)}
             >
-          <Text style={styles.buttonText}>View Full Calendar</Text>
+          <Text style={styles.buttonText}>
+            {showFullCalendar ? 'Minimize Calendar' : 'View Full Calendar'}
+          </Text>
         </TouchableOpacity>
       </View>
           {showFullCalendar ? (
@@ -116,6 +118,7 @@ const ToDoList = () => {
       buttonText: {
         color: '#ea9c8a',
         fontSize: 13,
+        marginLeft: '5%'
       },
       toDoListContainer: {
         padding: 20,
