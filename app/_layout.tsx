@@ -19,7 +19,18 @@ const RootLayout = () => {
       <Stack.Screen name="screens/Timer/index" />
       <Stack.Screen name="screens/WhiteNoise/index" />
       <Stack.Screen name="screens/PawSpace/index" />
-      </Stack>
+      <Stack.Screen name="screens/Setting/index" 
+        options={{
+          headerBackTitleVisible: false,
+          headerShown: true,
+          headerTitle: 'Settings',
+          headerStyle: {
+            backgroundColor: '#fff',
+          },
+          headerTintColor: 'gray',
+          headerTitleAlign: 'center',
+      }}/>
+    </Stack>
   );
 };
 

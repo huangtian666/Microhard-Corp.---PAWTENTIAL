@@ -7,11 +7,23 @@ import ToDoList from '@/app/screens/ToDoList';
 import Timer from '@/app/screens/Timer';
 import WhiteNoise from '@/app/screens/WhiteNoise';
 import PawSpace from '@/app/screens/PawSpace';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { router } from 'expo-router';
 
 
 const Tab = createBottomTabNavigator();
 
 const NavigationBar = () => {
+
+  const CustomHeaderTitle = ({ title, icon }) => {
+    return (
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <Ionicons name={icon} size={24} color='gray' style={{ marginRight: 15}} />
+        <Text style={{ color: 'gray', fontSize: 17, fontWeight: 'bold' }}>{title}</Text>
+      </View>
+    );
+  };
+
   return (
     <Tab.Navigator
         initialRouteName='Home'
@@ -45,7 +57,7 @@ const NavigationBar = () => {
         tabBarActiveTintColor: '#ea9c8a',
         tabBarInactiveTintColor: 'gray',
         tabBarStyle: { 
-          heigh:70,
+          height:75,
           paddingBottom: 17,
           paddingTop: 8,
           paddingHorizontal: 7, 
@@ -62,9 +74,37 @@ const NavigationBar = () => {
         },
       })}
     >
-      <Tab.Screen name="To-Do List" component={ToDoList} />
+      <Tab.Screen name="To-Do List" 
+        component={ToDoList} 
+        options={{ 
+          headerShown: true,
+          headerTitle: () => <CustomHeaderTitle title="To-Do List" icon="list" />,
+          headerStyle: { 
+            borderWidth: 0.5,
+            backgroundColor: 'white', // Example background color for header
+          },
+          headerTitleAlign: 'left',
+          headerTitleContainerStyle: { paddingLeft: 20 },
+        }} 
+        />
       <Tab.Screen name="Timer" component={Timer} />
-      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="Home" component={Home} 
+              options={{ 
+                headerShown: true,
+                headerTitle: () => <CustomHeaderTitle title="Hi Username" icon="home-outline" />,
+                headerStyle: { 
+                  backgroundColor: 'white', // Example background color for header
+                  borderWidth: 0.5,
+                },
+                headerTitleAlign: 'left',
+                headerTitleContainerStyle: { paddingLeft: 20 },
+                headerRight: () => (
+                  <TouchableOpacity onPress={() => router.navigate('/screens/Setting')} style={{ marginRight: '17%' }}>
+                    <Ionicons name="settings-outline" size={24} color="gray" />
+                  </TouchableOpacity>
+                ),
+              }}
+            />
       <Tab.Screen name="WhiteNoise" component={WhiteNoise} />
       <Tab.Screen name="PawSpace" component={PawSpace} />
     </Tab.Navigator>
