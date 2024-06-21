@@ -1,5 +1,5 @@
-import { Text, StyleSheet, ScrollView, Dimensions, TouchableOpacity, FlatList, View, Modal, TextInput, Button} from 'react-native';
-import React, { useState, useEffect, useRef } from 'react';
+import { Text, StyleSheet, Dimensions, TouchableOpacity, View} from 'react-native';
+import React from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 const Task =(props) => {
@@ -7,10 +7,22 @@ const Task =(props) => {
     return (
         <View style={styles.container}>
             <View style={styles.itemLeft}>
-                <TouchableOpacity style={styles.square}></TouchableOpacity>
-                <Text style={styles.text}>{props.text}</Text>
+                <TouchableOpacity 
+                    onPress={() => props.toggleTaskCompletion(props.index)}
+                    style={ [styles.square,
+                        props.completed && styles.completedSquare]
+                    }
+                >
+                    {props.completed && <Ionicons name="checkmark-done-sharp" size={22} color='#ea9c8a' />}
+                </TouchableOpacity>
+                <Text style={[styles.text, props.completed && styles.completedText]}>{props.text}</Text>
+                </View>
+
+            <TouchableOpacity onPress={() => props.deleteTask(props.index)}>
+             <View>
+                <Ionicons name="close-circle" size={25} color='#ea9c8a' />
              </View>
-             <View style={styles.circular}></View>
+            </TouchableOpacity>
         </View>
     );
 }
@@ -37,18 +49,18 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 5,
     },
-    circular: {
-        width:15,
-        height:15,
-        borderColor: 'white',
-        borderWidth: 3,
-        borderRadius: 10,
-    },
     text: {
         maxWidth: '80%',
         marginLeft: 20,
         fontSize: 15,
         color: '#544644',
+    },
+    completedText: {
+        textDecorationLine: 'line-through',
+        color: '#A0A0A0',  
+    },
+    completedSquare: {
+
     }
 })
 
