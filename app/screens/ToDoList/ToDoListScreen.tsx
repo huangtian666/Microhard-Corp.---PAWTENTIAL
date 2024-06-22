@@ -1,9 +1,11 @@
-import { Text, StyleSheet, Dimensions, TouchableOpacity, View, TextInput, KeyboardAvoidingView, Platform, Keyboard, Alert, ActivityIndicator, UIManager, LayoutAnimation, FlatList } from 'react-native';
+import { Text, StyleSheet, Dimensions, TouchableOpacity, View, TextInput, KeyboardAvoidingView, 
+  Platform, Keyboard, Alert, ActivityIndicator, UIManager, LayoutAnimation, FlatList } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 import { CalendarList } from 'react-native-calendars';
 import moment from 'moment';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Task from '@/components/Task';
+import { useTaskContext } from '../../Context/TaskProvider';
 
 interface TaskItem {
   text: string;
@@ -23,6 +25,7 @@ const ToDoList: React.FC = () => {
   const minDate = `${currentYear}-01-01`;
   const maxDate = `${currentYear + 1}-12-31`;
 
+  const { setTodayTotalTasks, setTodayCompletedTasks } = useTaskContext();
   const [showFullCalendar, setShowFullCalendar] = useState(false);
   const [selectedDate, setSelectedDate] = useState(moment().format('YYYY-MM-DD'));
   const flatListRef = useRef<FlatList<string>>(null);
@@ -31,6 +34,12 @@ const ToDoList: React.FC = () => {
   const [task, setTask] = useState<string | null>('');
   const [tasksByDate, setTasksByDate] = useState<TasksByDate>({});
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const todayTasks = tasksByDate[currentDate] || [];
+    setTodayTotalTasks(todayTasks.length);
+    setTodayCompletedTasks(todayTasks.filter(task => task.completed).length);
+  }, [tasksByDate, currentDate, setTodayTotalTasks, setTodayCompletedTasks]);
 
   const handleAddTask = () => {
     if (!task || task.trim() === '') {
@@ -45,20 +54,32 @@ const ToDoList: React.FC = () => {
       const newTask: TaskItem = { text: task!, completed: false };
       setTasksByDate(prevTasks => {
         const dateTasks = prevTasks[selectedDate] || [];
+        const updatedTasks = [...dateTasks, newTask];
+        
+        if (selectedDate === currentDate) {
+          setTodayTotalTasks(updatedTasks.length);
+        }
+
         return {
           ...prevTasks,
-          [selectedDate]: [...dateTasks, newTask]
+          [selectedDate]: updatedTasks
         };
       });
       setTask('');
       setLoading(false);
-    }, 300);
+    }, 100);
   };
 
   const deleteTask = (index: number) => {
     setTasksByDate(prevTasks => {
       const dateTasks = [...(prevTasks[selectedDate] || [])];
-      dateTasks.splice(index, 1);
+      const taskToDelete = dateTasks.splice(index, 1)[0];
+      if (selectedDate === currentDate) {
+        setTodayTotalTasks(dateTasks.length);
+        if (taskToDelete.completed) {
+          setTodayCompletedTasks(prev => prev - 1);
+        }
+      }
       return {
         ...prevTasks,
         [selectedDate]: dateTasks
@@ -71,6 +92,9 @@ const ToDoList: React.FC = () => {
     setTasksByDate(prevTasks => {
       const dateTasks = [...(prevTasks[selectedDate] || [])];
       dateTasks[index].completed = !dateTasks[index].completed;
+      if (selectedDate === currentDate) {
+        setTodayCompletedTasks(dateTasks.filter(task => task.completed).length);
+      }
       return {
         ...prevTasks,
         [selectedDate]: dateTasks.sort((a, b) => a.completed - b.completed)
@@ -223,7 +247,8 @@ const ToDoList: React.FC = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}  
         style={styles.writeTaskWrapper}
       >
-        <TextInput style={styles.textInput} placeholder='Write a task' autoCapitalize='none' value={task || ''} onChangeText={text => setTask(text)} />
+        <TextInput style={styles.textInput} placeholder='Write a task' autoCapitalize='none' 
+          value={task || ''} onChangeText={text => setTask(text)} />
         <TouchableOpacity onPress={handleAddTask} disabled={loading}>
           <View style={styles.addWrapper}>
             {loading ? (
@@ -234,23 +259,30 @@ const ToDoList: React.FC = () => {
           </View>
         </TouchableOpacity>
       </KeyboardAvoidingView>
-      <FlatList
-        style={styles.taskList}
-        contentContainerStyle={styles.taskListContainer}
-        data={sortedTasks}
-        renderItem={({ item, index }) => (
-          <Task 
-            key={index} 
-            text={item.text} 
-            index={index} 
-            completed={item.completed}
-            deleteTask={deleteTask} 
-            toggleTaskCompletion={toggleTaskCompletion}
-          />
-        )}
-        keyExtractor={(item, index) => index.toString()}
-        ListFooterComponent={<View style={{ height: 10 }} />} // Add gap at the bottom
-      />
+      {sortedTasks.length === 0 ? (
+        <View>
+          <Text style={styles.noTasksText}>No Tasks Yet</Text>
+          <Text style={styles.quote}> “Plans are nothing; planning is everything.” 
+                ― Dwight D. Eisenhower, former U.S. President </Text>
+        </View>
+      ) : (
+        <FlatList
+          style={styles.taskList}
+          contentContainerStyle={styles.taskListContainer}
+          data={sortedTasks}
+          renderItem={({ item, index }) => (
+            <Task 
+              key={index} 
+              text={item.text} 
+              index={index} 
+              completed={item.completed}
+              deleteTask={deleteTask} 
+              toggleTaskCompletion={toggleTaskCompletion}
+            />
+          )}
+          keyExtractor={(item, index) => index.toString()}
+          ListFooterComponent={<View style={{ height: 10 }} />} // Add gap at the bottom
+        />)}
     </View>
   );
 }
@@ -368,6 +400,20 @@ const styles = StyleSheet.create({
     color: '#ea9c8a',
     fontSize: 14,
   },
+  noTasksText: {
+    fontSize: 20,
+    color: '#a5807b',
+    textAlign: 'center',
+    marginTop: '40%',
+    fontWeight: 'bold',
+  },
+  quote: {
+    fontSize: 15,
+    color: '#a5807b',
+    textAlign: 'center',
+    marginTop: 10,
+    paddingHorizontal: '10%',
+  }
 });
 
 export default ToDoList;

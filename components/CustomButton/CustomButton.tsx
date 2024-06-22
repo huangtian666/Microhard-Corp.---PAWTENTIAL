@@ -36,6 +36,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#ea9c8a',
         marginVertical: 10,
     },
+    container_PRIMARY_SHORT: {
+        backgroundColor: '#ea9c8a',
+        marginVertical: 10,
+        width: '40%',
+    },
     container_SECONDARY: {
         borderWidth: 2,
         borderColor:'#ea9c8a',
@@ -60,7 +65,10 @@ const styles = StyleSheet.create({
     },
     text_DISABLED: {
         color: 'gray',
-    }
+    },
+    text_PRIMARY_SHORT: {
+        color: '#ea9c8a',
+    },
 })
 
 export default CustomButton

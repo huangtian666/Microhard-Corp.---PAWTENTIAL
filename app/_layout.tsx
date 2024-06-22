@@ -1,8 +1,11 @@
 import React from 'react';
 import { Stack} from 'expo-router';
+import { TaskProvider } from './Context/TaskProvider';
 
 const RootLayout = () => {
+
   return (
+    <TaskProvider>
       <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="screens/Authentication/SignInScreen/index" />
       <Stack.Screen name="screens/Authentication/SignUpScreen/index" />
@@ -31,6 +34,7 @@ const RootLayout = () => {
           headerTitleAlign: 'center',
       }}/>
     </Stack>
+    </TaskProvider>
   );
 };
 

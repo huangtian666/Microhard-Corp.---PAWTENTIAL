@@ -1,81 +1,86 @@
-import { Link } from 'expo-router';
-import { View, Text, StyleSheet,Button, TouchableOpacity,Image} from 'react-native';
-import naruto from '../../../assets/images/naruto.png';
-import CustomButton from '@/components/CustomButton';
-import { FIREBASE_AUTH } from '@/FirebaseConfig';
-import { signOut } from 'firebase/auth';
-import {router, useRouter} from 'expo-router';
+import { StyleSheet, TouchableOpacity, Text, View, ScrollView, Dimensions, SafeAreaView} from 'react-native';
+import { router } from 'expo-router';
 import React from 'react';
+import { useTaskContext } from '../../Context/TaskProvider';
+import * as Progress from 'react-native-progress';
 
+const Home: React.FC = () => {
+  const { todayTotalTasks, todayCompletedTasks } = useTaskContext();
+  
+  const progress = todayTotalTasks > 0 ? todayCompletedTasks / todayTotalTasks : 0;
 
-export default function HomeScreen() {
-
-  const auth = FIREBASE_AUTH;
-  const router = useRouter();
-
-  const handlePress = () => {
-    console.log("pressed") //print messages to the console
-  } // arrow function in js
-
-  const pressImage = () => {
-    console.log("meow")
+  const viewTask = () => {
+    // Navigation or any function to view tasks
   }
 
-  const handleSignOut = async () => {
-    signOut(auth).then(() => {
-            console.log('User signed out');
-            router.push('/screens/Authentication/SignInScreen');
-        })
-        .catch(error => {
-            console.error('Sign out error:', error);
-        });
-};
-
-
   return (
-    <View style={styles.container}>
-      <Text style ={styles.text}>Welcome to PAWTENTIAL!</Text> 
-      <Button title = "Timer" onPress={handlePress} /> 
-      <Link href="/details" style ={styles.link}>View details</Link>
-      <TouchableOpacity onPress={pressImage}>
-        <Image 
-            source ={naruto}
-            style={styles.image}/>
-      </TouchableOpacity>
-    <CustomButton
-        text='Sign Out' 
-        onPress={handleSignOut}
-    />
-    </View>
- )}
+    <ScrollView contentContainerStyle={{ backgroundColor: 'white', flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.card}>
+          <View style={styles.taskStatusContainer}>
+            <Text style={styles.title}>Your today's task almost done!</Text>
+            <Progress.Circle
+              progress={progress}
+              size={100}
+              borderWidth={8}
+              color="#3399FF"
+              shadowColor="#999"
+              bgColor="#fff"
+              thickness={8}
+            >
+              <Text style={{ fontSize: 18 }}>{Math.round(progress * 100)}%</Text>
+            </Progress.Circle>
+          </View>
+          <TouchableOpacity style={styles.button} onPress={viewTask}>
+            <Text style={styles.buttonText}>View Task</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </ScrollView>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,//make everything(words, images) occupy the entire page
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white',
-    //flexDirection: "row"
-  },// flexbox 
-  text: {
-    color: "green",
-    fontSize: 20,
-  },  
-  link: {
-    color: 'orange',
+  },
+  card: {
+    backgroundColor: '#5C50E6', // Background color of the card
+    borderRadius: 20, // Rounded corners
+    width: Dimensions.get('window').width*0.9,
+    height: Dimensions.get('window').height*0.2,
+    padding:20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  taskStatusContainer: {
+    flexDirection: 'row', // Align items side by side
+    alignItems: 'center',
+    justifyContent: 'space-between', // Space between elements
+  },
+  title: {
     fontSize: 18,
+    color: '#fff',
+    flex: 1, // Allow text to take up available space
   },
-  image: {
-    width: 80,
-    height: 250,
-  },
-  touchable: {
-    marginTop: 50,
+  button: {
     padding: 10,
     borderRadius: 5,
-    backgroundColor: '#ddd',
-    position: 'absolute',
-    top: 50,
-    left: 50,
+    backgroundColor: '#7F67F6',
+    alignSelf: 'flex-start', // Align button to the start of the container
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
   },
 });
+
+export default Home;
