@@ -21,6 +21,7 @@ const RootLayout = () => {
       <Stack.Screen name="screens/ToDoList/index" />
       <Stack.Screen name="screens/Timer/index" />
       <Stack.Screen name="screens/WhiteNoise/index" />
+      <Stack.Screen name ="screens/VideoPlayerScreen/index" />
       <Stack.Screen name="screens/PawSpace/index" />
       <Stack.Screen name="screens/Setting/index" 
         options={{

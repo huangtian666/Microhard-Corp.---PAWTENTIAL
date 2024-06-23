@@ -130,7 +130,18 @@ const NavigationBar = () => {
                 ),
               }}
             />
-      <Tab.Screen name="WhiteNoise" component={WhiteNoise} />
+      <Tab.Screen name="WhiteNoise" component={WhiteNoise} 
+                      options={{ 
+                        headerShown: true,
+                        headerTitle: () => <CustomHeaderTitle title={`White Noise Videos`} icon="musical-notes-outline" />,
+                        headerStyle: { 
+                          backgroundColor: 'white', // Example background color for header
+                          borderWidth: 0.5,
+                        },
+                        headerTitleAlign: 'left',
+                        headerTitleContainerStyle: { paddingLeft: 20 },
+                      }}
+      />
       <Tab.Screen name="PawSpace" component={PawSpace} />
     </Tab.Navigator>
   );

@@ -24,10 +24,12 @@ const Home: React.FC = () => {
           <View style={styles.textContainer}>
               {todayTotalTasks === 0 ? (
                 <Text style={styles.title}>No Task for Today</Text>
+              ) : progress <= 0.15 ? (
+                <Text style={styles.title}>Time to start!</Text>
               ) : progress <= 0.5 ? (
                 <Text style={styles.title}>You are doing well!</Text>
               ) : progress < 1 ? (
-                <Text style={styles.title}>Your today's task{'\n'}almost done!</Text>
+                <Text style={styles.title}>Today's tasks{'\n'}are almost done!</Text>
               ) : (
                 <Text style={styles.title}>Congratulations!{'\n'}You completed{'\n'}all tasks!</Text>
               )}
