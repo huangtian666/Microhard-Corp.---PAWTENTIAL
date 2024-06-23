@@ -35,10 +35,10 @@ const Question2 = () => {
         const user = auth.currentUser;
         if (user) {
             try {
-                await saveUserData(user.uid, { cleanedPetname });
+                await saveUserData(user.uid, { cleanedPetname, onboardingComplete: true });
                 await AsyncStorage.setItem('onboardingComplete', 'true');
                 setIsLoading(false); // End loading
-                router.push('/screens/Home');
+                router.push('/screens/NavigationBar');
             } catch (error) {
                 setIsLoading(false); // End loading
                 Alert.alert('Error', 'Failed to save user data');

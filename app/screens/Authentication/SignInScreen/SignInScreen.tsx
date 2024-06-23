@@ -8,6 +8,7 @@ import { router } from 'expo-router';
 import { FIREBASE_AUTH} from '@/FirebaseConfig';
 import {signInWithEmailAndPassword, sendEmailVerification} from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { checkOnboardingStatus } from '@/FirestoreService';
 
 const SignInScreen = () => {
     const [email, setEmail] = useState('');
@@ -18,16 +19,6 @@ const SignInScreen = () => {
     const cleanedEmail = email.trim().toLowerCase();
 
     const {height} = useWindowDimensions();
-
-    const checkOnboardingStatus = async () => {
-      try {
-          const value = await AsyncStorage.getItem('onboardingComplete');
-          return value !== null;
-      } catch (error) {
-          console.error('Error checking onboarding status:', error);
-          return false;
-      }
-    };
 
     const onSignInPressed = async () => { 
       if (!email && !password) {
@@ -48,7 +39,7 @@ const SignInScreen = () => {
   .then(async (userCredentials) => {
       console.log('Signed in');
       if(userCredentials.user?.emailVerified) {
-        const hasCompletedOnboarding = await checkOnboardingStatus();
+        const hasCompletedOnboarding = await checkOnboardingStatus(userCredentials.user.uid);
         if (hasCompletedOnboarding) {
             router.push('/screens/NavigationBar');
         } else {

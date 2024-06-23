@@ -6,6 +6,7 @@ import { FIREBASE_AUTH } from '@/FirebaseConfig';
 import { appleAuth  } from '@invertase/react-native-apple-authentication';
 import { Alert } from 'react-native';
 import {router} from 'expo-router';
+import { checkOnboardingStatus } from '@/FirestoreService';
 
 const SocialSignInButtons = () => {
     const auth = FIREBASE_AUTH;
@@ -50,27 +51,47 @@ const SocialSignInButtons = () => {
       return signInWithCredential(auth,appleCredential);
     }    
 
-    /*const onSignInIOS = () => {
-      onPress={() => onAppleButtonPress().then(() => console.log('Apple sign-in complete!'))};
-    }*/
-
-   const onSignInGoogle = () => {
-      onGoogleButtonPress().then(() => 
-        console.log('Signed in with Google!'))
-      .then(() => router.push('/screens/Home'))
-
-    }
-
-    const onSignInIOS = () => {
+    const onSignInGoogle = async () => {
+      try {
+        await onGoogleButtonPress();
+        console.log('Signed in with Google!');
+        
+        const userId = auth.currentUser.uid;
+        const hasCompletedOnboarding = await checkOnboardingStatus(userId);
+    
+        if (hasCompletedOnboarding) {
+          router.replace('/screens/NavigationBar');
+        } else {
+          router.replace('/screens/WelcomeScreen');
+        }
+      } catch (error) {
+        console.error('Error signing in:', error);
+      }
+    };
+    
+    const onSignInIOS = async () => {
       if (!appleAuth.isSupported) {
         console.log('Apple Sign-in is not supported on this device');
-        Alert.alert('Error','Apple Sign-in is not supported on this device')
+        Alert.alert('Error', 'Apple Sign-in is not supported on this device');
         return;
-    } 
-        onAppleButtonPress().then(() =>
-          console.log('Apple sign-in complete!')
-        ).then(() => router.push('/screens/Home'))
-    }
+      }
+    
+      try {
+        await onAppleButtonPress();
+        console.log('Apple sign-in complete!');
+    
+        const userId = auth.currentUser.uid;
+        const hasCompletedOnboarding = await checkOnboardingStatus(userId);
+    
+        if (hasCompletedOnboarding) {
+          router.replace('/screens/NavigationBar');
+        } else {
+          router.replace('/screens/WelcomeScreen');
+        }
+      } catch (error) {
+        console.error('Error signing in with Apple:', error);
+      }
+    };
 
     return (
         <>

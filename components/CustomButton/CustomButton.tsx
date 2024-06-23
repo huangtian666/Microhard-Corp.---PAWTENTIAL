@@ -67,7 +67,9 @@ const styles = StyleSheet.create({
         color: 'gray',
     },
     text_PRIMARY_SHORT: {
-        color: '#ea9c8a',
+        fontWeight: 'bold',
+        color: 'white',
+        fontSize: 15,
     },
 })
 

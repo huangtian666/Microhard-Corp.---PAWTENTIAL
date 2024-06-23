@@ -1,5 +1,5 @@
 // app/NavigationBar.js
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Home from '@/app/screens/Home';
@@ -10,11 +10,35 @@ import PawSpace from '@/app/screens/PawSpace';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
+import { FIREBASE_DB, FIREBASE_AUTH } from '@/FirebaseConfig';
+import { getUsername } from '@/FirestoreService';
 
 
 const Tab = createBottomTabNavigator();
 
 const NavigationBar = () => {
+
+  const auth = FIREBASE_AUTH;
+  const db = FIREBASE_DB;
+  const [username, setUsername] = useState('');
+
+
+  useEffect(() => {
+    const fetchUsername = async () => {
+      try {
+        const userId = auth.currentUser.uid;
+        const username = await getUsername(userId);
+        setUsername(username);
+      } catch (error) {
+        console.error('Error fetching username:', error);
+      }
+    };
+
+    if (auth.currentUser) {
+      fetchUsername();
+    }
+  }, [auth.currentUser]);
+
 
   const CustomHeaderTitle = ({ title, icon }) => {
     return (
@@ -92,7 +116,7 @@ const NavigationBar = () => {
       <Tab.Screen name="Home" component={Home} 
               options={{ 
                 headerShown: true,
-                headerTitle: () => <CustomHeaderTitle title="Hi Username" icon="home-outline" />,
+                headerTitle: () => <CustomHeaderTitle title={`Hi ${username} !`} icon="home-outline" />,
                 headerStyle: { 
                   backgroundColor: 'white', // Example background color for header
                   borderWidth: 0.5,
