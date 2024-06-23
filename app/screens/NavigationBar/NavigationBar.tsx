@@ -9,6 +9,7 @@ import WhiteNoise from '@/app/screens/WhiteNoise';
 import PawSpace from '@/app/screens/PawSpace';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 
 
 const Tab = createBottomTabNavigator();

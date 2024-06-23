@@ -3,23 +3,34 @@ import { router } from 'expo-router';
 import React from 'react';
 import { useTaskContext } from '../../Context/TaskProvider';
 import * as Progress from 'react-native-progress';
+import { useNavigation } from '@react-navigation/native';
+
 
 const Home: React.FC = () => {
   const { todayTotalTasks, todayCompletedTasks } = useTaskContext();
+  const navigation = useNavigation();
   
   const progress = todayTotalTasks > 0 ? todayCompletedTasks / todayTotalTasks : 0;
 
   const viewTask = () => {
-    router.push('/screens/ToDoList')
-  }
+    navigation.navigate('To-Do List'); // Navigate to the 'To-Do List' tab using its name
+  };
 
   return (
     <ScrollView contentContainerStyle={{ backgroundColor: 'white', flexGrow: 1 }}>
       <SafeAreaView style={styles.container}>
         <View style={styles.card}>
           <View style={styles.taskStatusContainer}>
-            <View style={styles.textContainer}>
-              <Text style={styles.title}>Your today's task{'\n'}almost done!</Text>
+          <View style={styles.textContainer}>
+              {todayTotalTasks === 0 ? (
+                <Text style={styles.title}>No Task for Today</Text>
+              ) : progress <= 0.5 ? (
+                <Text style={styles.title}>You are doing well!</Text>
+              ) : progress < 1 ? (
+                <Text style={styles.title}>Your today's task{'\n'}almost done!</Text>
+              ) : (
+                <Text style={styles.title}>Congratulations!{'\n'}You completed{'\n'}all tasks!</Text>
+              )}
               <TouchableOpacity style={styles.button} onPress={viewTask}>
                 <Text style={styles.buttonText}>View Task</Text>
               </TouchableOpacity>
@@ -28,9 +39,8 @@ const Home: React.FC = () => {
               progress={progress}
               size={100}
               borderWidth={8}
-              color="white"
-              shadowColor="#999"
-              bgColor="#fff"
+              color='#2A7EDF'
+              borderColor='white'
               thickness={8}
             >
               <Text  style={styles.progressText}>{Math.round(progress * 100)}%</Text>
@@ -49,17 +59,17 @@ const styles = StyleSheet.create({
     marginTop: 20, // Move the card closer to the top
   },
   card: {
-    backgroundColor: '#5C50E6', // Background color of the card
+    backgroundColor: '#6AB6FD', // Background color of the card
     borderRadius: 20, // Rounded corners
     width: Dimensions.get('window').width * 0.9,
     height: Dimensions.get('window').height * 0.175,
     padding: 20,
-    shadowColor: "#000",
+    shadowColor: '#839AB6',
     shadowOffset: {
-      width: 0,
-      height: 2,
+      width: 4,
+      height: 5,
     },
-    shadowOpacity: 0.25,
+    shadowOpacity: 1,
     shadowRadius: 3.84,
     elevation: 5,
   },
@@ -86,12 +96,13 @@ const styles = StyleSheet.create({
     marginTop: 5,
     padding: 10,
     borderRadius: 8,
-    backgroundColor: '#7F67F6',
+    backgroundColor: '#A1D2FF',
     alignSelf: 'flex-start', // Align button to the start of the container
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 14,
+    fontWeight: 'bold'
   },
   progressCircle: {
     marginRight: '5%',
