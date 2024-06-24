@@ -1,32 +1,42 @@
-import React, { useRef } from 'react';
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
-import { Video } from 'expo-av';
-import { useLocalSearchParams } from 'expo-router';
+import React, { useRef, useState } from 'react';
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, SafeAreaView, ActivityIndicator } from 'react-native';
+import { Video, ResizeMode } from 'expo-av';
+import { Ionicons } from '@expo/vector-icons';
+import { useRoute } from '@react-navigation/native';
+import { router } from 'expo-router';
 
 const VideoPlayerScreen = () => {
-  const { videoUrl, title} = useLocalSearchParams();
-  const videoRef = useRef(null);
+  const route = useRoute();
+  const { videoUrl, title } = route.params;
+  const videoRef = useRef<Video>(null);
+  const [status, setStatus] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [isLooping, setIsLooping] = useState(false);
 
-  const enterFullscreen = async () => {
-    if (videoRef.current) {
-      await videoRef.current.presentFullscreenPlayer();
+  const handleBackPress = () => {
+    router.back();
+  };
+
+  const handlePlaybackStatusUpdate = (status) => {
+    setStatus(status);
+    if (status.isLoaded) {
+      setLoading(false);
     }
   };
 
-  const exitFullscreen = async () => {
-    if (videoRef.current) {
-      await videoRef.current.dismissFullscreenPlayer();
+  const handlePlayPausePress = async () => {
+    if (status.isPlaying) {
+      await videoRef.current.pauseAsync();
+    } else {
+      setLoading(true);
+      await videoRef.current.playAsync();
     }
   };
 
-  const toggleFullscreen = async () => {
+  const handleLoopToggle = async () => {
     if (videoRef.current) {
-      const status = await videoRef.current.getStatusAsync();
-      if (status.isFullscreen) {
-        exitFullscreen();
-      } else {
-        enterFullscreen();
-      }
+      await videoRef.current.setIsLoopingAsync(!isLooping);
+      setIsLooping(!isLooping);
     }
   };
 
@@ -39,23 +49,41 @@ const VideoPlayerScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
+        <Ionicons name="arrow-back" size={24} color="white" />
+      </TouchableOpacity>
       <Text style={styles.videoTitle}>{title}</Text>
+      {loading && (
+        <ActivityIndicator size="large" color="#fff" style={styles.loadingIndicator} />
+      )}
       <Video
         ref={videoRef}
+        style={styles.video}
         source={{ uri: videoUrl }}
         rate={1.0}
         volume={1.0}
         isMuted={false}
-        resizeMode="cover"
-        shouldPlay
+        resizeMode={ResizeMode.CONTAIN}
+        shouldPlay={false} // Do not auto-play
         useNativeControls
-        style={styles.video}
+        onPlaybackStatusUpdate={handlePlaybackStatusUpdate}
       />
-      <TouchableOpacity onPress={toggleFullscreen} style={styles.button}>
-        <Text style={styles.buttonText}>Toggle Fullscreen</Text>
-      </TouchableOpacity>
-    </View>
+      <View style={styles.buttons}>
+        <TouchableOpacity
+          onPress={handlePlayPausePress}
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>{status.isLoaded && status.isPlaying ? 'Pause' : 'Play'}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={handleLoopToggle}
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>{isLooping ? 'Stop Loop' : 'Loop'}</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -76,27 +104,43 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'black',
   },
+  loadingIndicator: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginLeft: -25,
+    marginTop: -25,
+    zIndex: 1,
+  },
   videoTitle: {
     color: 'white',
     fontSize: 18,
     textAlign: 'center',
     marginVertical: 10,
+    fontWeight: 'bold',
   },
-  videoDescription: {
-    color: 'white',
-    fontSize: 14,
-    textAlign: 'center',
-    marginBottom: 10,
+  buttons: {
+    marginTop:10,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '80%',
   },
   button: {
     marginTop: 20,
     padding: 10,
-    backgroundColor: '#555',
+    backgroundColor: '#ea9c8a',
     borderRadius: 5,
   },
   buttonText: {
     color: 'white',
     fontSize: 16,
+    fontWeight: 'bold'
+  },
+  backButton: {
+    position: 'absolute',
+    top: 60,
+    left: 30,
+    zIndex: 1,
   },
 });
 

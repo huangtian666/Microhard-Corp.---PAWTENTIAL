@@ -1,12 +1,13 @@
 import {SafeAreaView, Text, Image, StyleSheet, ScrollView, Dimensions, Alert, View, FlatList, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
 import whiteNoiseTracks from './WhiteNoiseTracks'; 
-import { useRouter } from 'expo-router';
+import { useRoute } from '@react-navigation/native';
+import { router } from 'expo-router';
 
  
 const WhiteNoiseScreen = () => {
 
-    const router = useRouter();
+    const route = useRoute();
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
