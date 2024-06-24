@@ -1,5 +1,7 @@
-import { doc, setDoc, getDoc } from "firebase/firestore";
-import { FIREBASE_DB } from '@/FirebaseConfig';
+import { doc, setDoc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, collection, query, where  } from "firebase/firestore";
+import { FIREBASE_DB, FIREBASE_AUTH } from '@/FirebaseConfig';
+
+const auth = FIREBASE_AUTH;
 
 export const saveUserData = async (userId, data) => {
     try {
@@ -38,4 +40,51 @@ export const checkOnboardingStatus = async (userId) => {
         console.error('Error fetching username:', error);
         throw error;
     }
+};
+
+
+export const addTaskToFirestore = async (userId: string, date: string, text: string) => {
+  try {
+    const newTaskRef = doc(collection(FIREBASE_DB, 'users', userId, 'tasks'));
+    await setDoc(newTaskRef, {
+      date,
+      text,
+      completed: false,
+      userId,
+    });
+  } catch (error) {
+    console.error('Error adding task: ', error);
+  }
+};
+
+export const updateTaskInFirestore = async (userId: string, taskId: string, completed: boolean) => {
+  try {
+    const taskRef = doc(FIREBASE_DB, 'users', userId, 'tasks', taskId);
+    await updateDoc(taskRef, {
+      completed,
+    });
+  } catch (error) {
+    console.error('Error updating task: ', error);
+  }
+};
+
+export const deleteTaskFromFirestore = async (userId: string, taskId: string) => {
+  try {
+    const taskRef = doc(FIREBASE_DB, 'users', userId, 'tasks', taskId);
+    await deleteDoc(taskRef);
+  } catch (error) {
+    console.error('Error deleting task: ', error);
+  }
+};
+
+export const getTasksForDateFromFirestore = async (userId: string, date: string) => {
+  try {
+    const tasksQuery = query(collection(FIREBASE_DB, 'users', userId, 'tasks'), where('date', '==', date));
+    const querySnapshot = await getDocs(tasksQuery);
+    const tasks = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+    return tasks;
+  } catch (error) {
+    console.error('Error getting tasks: ', error);
+    return [];
+  }
 };
