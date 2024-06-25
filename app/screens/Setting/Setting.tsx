@@ -20,14 +20,24 @@ const Setting = () => {
             });
     };
 
+    const handleDeleteAccount = () => {
+        console.log('Delete Account')
+        //router.push('/screens/Authentication/SignInScreen');
+    };
+
    
     return (
         <ScrollView contentContainerStyle={{paddingBottom: 20, backgroundColor: 'white'}} >
             <SafeAreaView style={styles.container}>
-            <CustomButton
-                text='Sign Out' 
-                onPress={handleSignOut}
-            />
+                
+                <CustomButton
+                    text='Sign Out' 
+                    onPress={handleSignOut}
+                />
+                <CustomButton
+                    text='Delete Account' 
+                    onPress={handleDeleteAccount}
+                />
             </SafeAreaView>
         </ScrollView>
     ); 

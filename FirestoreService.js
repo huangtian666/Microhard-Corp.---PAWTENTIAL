@@ -1,5 +1,6 @@
 import { doc, setDoc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, collection, query, where  } from "firebase/firestore";
 import { FIREBASE_DB, FIREBASE_AUTH } from '@/FirebaseConfig';
+import moment from 'moment';
 
 const auth = FIREBASE_AUTH;
 
@@ -86,5 +87,27 @@ export const getTasksForDateFromFirestore = async (userId: string, date: string)
   } catch (error) {
     console.error('Error getting tasks: ', error);
     return [];
+  }
+};
+
+export const getMotivationalQuote = async () => {
+  try {
+    const quotesCollection = collection(FIREBASE_DB, 'motivationalQuotes');
+    const quotesSnapshot = await getDocs(quotesCollection);
+    const quotesList = quotesSnapshot.docs.map(doc => doc.data());
+
+    if (quotesList.length === 0) {
+      throw new Error("No quotes found");
+    }
+
+    // Use the current date to determine the quote of the day
+    const today = moment().format('YYYY-MM-DD');
+    const dateBasedIndex = moment(today).dayOfYear() % quotesList.length;
+    const todaysQuote = quotesList[dateBasedIndex];
+
+    return todaysQuote;
+  } catch (error) {
+    console.error("Error fetching motivational quote: ", error);
+    return null;
   }
 };
