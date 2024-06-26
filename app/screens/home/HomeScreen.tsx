@@ -6,11 +6,47 @@ import { useNavigation } from '@react-navigation/native';
 import { getMotivationalQuote } from '@/FirestoreService';
 import { BarChart, ProgressChart, LineChart } from 'react-native-chart-kit';
 import Svg, { Line } from 'react-native-svg';
+import { opacity } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
+
+
+// Mock data
+const dailyHours = [10, 15, 20, 25, 30, 35, 40];
+const monthlyHours = [
+  { name: 'January', shortName: 'Jan', hours: 200 },
+  { name: 'February', shortName: 'Feb', hours: 300 },
+  { name: 'March', shortName: 'Mar', hours: 250 },
+  { name: 'April', shortName: 'Apr', hours: 350 },
+  { name: 'May', shortName: 'May', hours: 400 },
+  { name: 'June', shortName: 'Jun', hours: 280 },
+  { name: 'July', shortName: 'Jul', hours: 320 },
+  { name: 'August', shortName: 'Aug', hours: 290 },
+  { name: 'September', shortName: 'Sep', hours: 260 },
+  { name: 'October', shortName: 'Oct', hours: 330 },
+  { name: 'November', shortName: 'Nov', hours: 270 },
+  { name: 'December', shortName: 'Dec', hours: 310 },
+];
 
 const Home: React.FC = () => {
   const { todayTotalTasks, todayCompletedTasks } = useTaskContext();
   const navigation = useNavigation();
   const [quote, setQuote] = useState({ text: '', author: '' });
+
+  const currentMonthIndex = new Date().getMonth();
+  const currentDayIndex = new Date().getDay() - 1;
+  const overallHours = dailyHours.reduce((total, hours) => total + hours, 0);
+  const averageMonthlyHours = monthlyHours.reduce((total, month) => total + month.hours, 0) / monthlyHours.length;
+  const averageWeeklyHours = dailyHours.reduce((total, hours) => total + hours, 0) / dailyHours.length;
+
+  const [selectedMonthData, setSelectedMonthData] = useState({
+    index: currentMonthIndex,
+    hours: monthlyHours[currentMonthIndex].hours,
+  });
+
+
+  const [selectedDayData, setSelectedDayData] = useState({
+    index: currentDayIndex,
+    hours: dailyHours[currentDayIndex],
+  });
 
   useEffect(() => {
     const fetchQuote = async () => {
@@ -27,34 +63,26 @@ const Home: React.FC = () => {
     navigation.navigate('To-Do List'); // Navigate to the 'To-Do List' tab using its name
   };
 
-  const getRandomColor = () => {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  };
-
   const barChartConfig = {
     backgroundGradientFromOpacity: 0,
     backgroundGradientToOpacity: 0,
     decimalPlaces: 0,
+    propsForLabels: {
+      fill: 'black',
+      
+    },
+    barPercentage: 0.9, // Adjust this value to make bars wider
+    fillShadowGradientFrom: '#ffbbd4',
+    fillShadowGradientTo: '#8abce6',
+    fillShadowGradientFromOpacity: 0.8,
+    fillShadowGradientToOpacity: 0.8,
     color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
     propsForBackgroundLines: {
       strokeDasharray: '4 5', // Dotted reference lines
       strokeWidth: 1,
       stroke: '#ccc',
     },
-    propsForLabels: {
-      fill: 'black',
-    },
-    barPercentage: 1, // Adjust this value to make bars wider
-    fillShadowGradientFrom: '#ffbbd4',
-    fillShadowGradientTo: '#8abce6',
-    fillShadowGradientFromOpacity: 1,
-    fillShadowGradientToOpacity: 1,
-    fillShadowGradientOpacity: 1,
+    barRadius: 10,
   };
 
   const lineChartConfig = {
@@ -72,37 +100,23 @@ const Home: React.FC = () => {
     },
     fillShadowGradientFrom: '#F7B3FF',
     fillShadowGradientTo: '#7F6EE4',
-    fillShadowGradientFromOpacity: 0.7,
-    fillShadowGradientToOpacity: 0.6,
+    fillShadowGradientFromOpacity: 0.6,
+    fillShadowGradientToOpacity: 0.5,
     propsForDots: {
       r: '4.5',
       fill: '#ccc', // Set the fill color of dots to pink
-    }
+    },
   }
-
-
-  // Mock data
-  const dailyHours = [10, 15, 20, 25, 30, 35, 40];
-  const monthlyHours = [
-    { name: 'Jan', hours: 200 },
-    { name: 'Feb', hours: 300 },
-    { name: 'Mar', hours: 250 },
-    { name: 'Apr', hours: 350 },
-    { name: 'May', hours: 400 },
-    { name: 'Jun', hours: 280 },
-    { name: 'Jul', hours: 320 },
-    { name: 'Aug', hours: 290 },
-    { name: 'Sep', hours: 260 },
-    { name: 'Oct', hours: 330 },
-    { name: 'Nov', hours: 270 },
-    { name: 'Dec', hours: 310 },
-  ];
-  
-  // Calculate the overall focused hours
-  const overallHours = dailyHours.reduce((total, hours) => total + hours, 0);
 
   const colors = dailyHours.map(() => `#${Math.floor(Math.random() * 16777215).toString(16)}`);
 
+  const handleDataPointClick = (data) => {
+    setSelectedMonthData({ index: data.index, hours: data.value });
+  };
+
+  const handleBarClick = (index) => {
+    setSelectedDayData({ index, hours: dailyHours[index] });
+  };
 
   return (
     <ScrollView contentContainerStyle={{ backgroundColor: 'white', flexGrow: 1 }}>
@@ -137,47 +151,6 @@ const Home: React.FC = () => {
             </Progress.Circle>
           </View>
         </View>
-
-{/* Daily Focused Hours */}
-        <Text style={styles.chartTitle}>Daily Focused Hours</Text>
-        <View style={styles.chartContainer1}>
-          <BarChart 
-            data={{
-              labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-              datasets: [{ data: dailyHours }],
-              colors: colors,
-            }}
-            //yAxisLabel={'hours'}
-            width={Dimensions.get('window').width *0.87}
-            height={220}
-            chartConfig={barChartConfig}
-            style={styles.transparentBackground1}
-            fromZero
-            verticalLabelRotation={30}
-            showBarTops={false} // Remove the black line at the top of each bar
-            withInnerLines={true} // Show inner grid lines
-          />
-        </View>
-
-        {/* Monthly Accumulated Hours */}
-        <Text style={styles.chartTitle}>Monthly Accumulated Hours</Text>  
-        <View style={styles.chartContainer2}>
-        <LineChart
-            data={{
-              labels: monthlyHours.map(month => month.name),
-              datasets: [{ data: monthlyHours.map(month => month.hours) }],
-            }}
-            
-            width={Dimensions.get('window').width * 0.95} // Adjust to fit within the container
-            height={Dimensions.get('window').width * 0.65}
-            chartConfig={lineChartConfig}
-            style={styles.transparentBackground2}
-            fromZero
-            verticalLabelRotation={30}
-            bezier
-          />
-        </View>
-
         <View style={styles.quoteContainer}>
           <Text style={styles.quote}>{quote.text}</Text>
           {quote.author && <Text style={{
@@ -186,6 +159,75 @@ const Home: React.FC = () => {
             fontStyle: 'italic',
             fontSize: 16,
             }}>- {quote.author}</Text>}
+        </View>
+
+{/* Daily Focused Hours */}
+        <Text style={styles.chartTitle}>Daily Focused Hours</Text>
+        {selectedDayData  && (
+            <View style={styles.customLabelContainer}>
+              <View style={styles.weekContainer}>
+              <Text style={styles.weekLableHeader}>{`${['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
+                'Saturday', 'Sunday'][selectedDayData.index]}`}</Text>
+              <Text style={styles.weekLabel}>{`Hours: ${selectedDayData.hours}`}</Text>
+              </View>
+              <View style={styles.weekAverageContainer}>
+              <Text style={styles.weekLableHeader}>{`Weekly Average: `}</Text>
+              <Text style={styles.weekLabel}>{`${averageWeeklyHours.toFixed(2)} hours`}</Text>
+              </View>
+            </View>
+          )}
+        <View style={styles.chartContainer1}>
+          <BarChart 
+            data={{
+              labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+              datasets: [{ data: dailyHours }],
+              colors: colors,
+            }}
+            width={Dimensions.get('window').width *0.9}
+            height={220}
+            chartConfig={barChartConfig}
+            style={styles.transparentBackground1}
+            fromZero
+            verticalLabelRotation={0}
+            showBarTops={false} // Remove the black line at the top of each bar
+            withInnerLines={true} // Show inner grid lines
+            withVerticalLines={true}
+            segments={2}
+            showValuesOnTopOfBars={true}
+            onDataPointClick={(index) => handleBarClick(index)}
+           />
+        </View>
+
+        {/* Monthly Accumulated Hours */}
+        <Text style={styles.chartTitle}>Monthly Accumulated Hours</Text>  
+        {selectedMonthData  && (
+            <View style={styles.customLabelContainer}>
+              <View style={styles.monthContainer}>
+                <Text style={styles.customLableHeader}>{`${monthlyHours[selectedMonthData.index].name} :`}</Text>
+                <Text style={styles.customLabel}>{`Hours: ${selectedMonthData.hours}`}</Text>
+              </View>
+              <View style={styles.monthAverageContainer}>
+                <Text style={styles.customLableHeader}>{`Average: `}</Text>
+                <Text style={styles.customLabel}>{` ${averageMonthlyHours.toFixed(2)} hours`}</Text>
+              </View>
+            </View>
+          )}
+        <View style={styles.chartContainer2}>
+        <LineChart
+            data={{
+              labels: monthlyHours.map(month => month.shortName),
+              datasets: [{ data: monthlyHours.map(month => month.hours) }],
+            }}
+            
+            width={Dimensions.get('window').width * 0.95} // Adjust to fit within the container
+            height={Dimensions.get('window').width * 0.6}
+            chartConfig={lineChartConfig}
+            style={styles.transparentBackground2}
+            fromZero
+            verticalLabelRotation={30}
+            bezier
+            onDataPointClick={(data) => handleDataPointClick(data)}
+          />
         </View>
       </SafeAreaView>
     </ScrollView>
@@ -199,6 +241,7 @@ const styles = StyleSheet.create({
     marginTop: 20, // Move the card closer to the top
   },
   card: {
+    opacity: 0.9,
     backgroundColor: '#6AB6FD', // Background color of the card
     borderRadius: 20, // Rounded corners
     width: Dimensions.get('window').width * 0.9,
@@ -264,9 +307,11 @@ const styles = StyleSheet.create({
   },
   quoteContainer: {
     paddingHorizontal: 18,
-    marginVertical: 20,
+    marginTop: 20,
+    marginBottom: 15,
   },
   chartContainer1: {
+    marginVertical: 20,
     justifyContent: 'flex-start',
     borderRadius: 16,
     backgroundColor: '#fff',
@@ -295,44 +340,126 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 1,
     shadowRadius: 3.84,
+    marginTop: 20,
+    marginBottom: 40,
+
   },
   chartTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
-    marginTop: 25,
+    marginTop: 15,
     marginBottom: 15,
-    paddingHorizontal: 20,
+    paddingHorizontal: 25,
     color: '#a5807b',
     alignSelf: 'flex-start'
   },
   transparentBackground1: {
     backgroundColor: 'transparent',
+    marginLeft: -20,
   },
   transparentBackground2: {
     backgroundColor: 'transparent',
     marginLeft: -40,
+    marginTop:15,
   },
-  dailyStatsContainer: {
+  customLabelContainer: {
+    marginTop: 5,
+    alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 30,
-    marginBottom: 10,
+    paddingHorizontal: 20,
   },
-  dailyStatsTitle: {
-    color: '#a5807b',
-    fontSize: 17,
-    marginBottom: 10,
-  }, 
-  dailyStatsText: {
-    color: '#a5807b',
-    fontSize: 15,
-    paddingHorizontal: 40,
-    marginBottom: 10,
+  customLableHeader: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#4D4D8F',
+    marginBottom: 3,
   },
-  axis: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
+  customLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign:'left',
+    color: '#4D4D8F', 
+    
+  },
+  monthAverageContainer: {
+    justifyContent: 'center',
+    borderRadius: 10,
+    //borderStyle: 'dashed',
+    padding: 10,
+    width: Dimensions.get('window').width * 0.4,
+    marginLeft: Dimensions.get('window').width * 0.1,
+    backgroundColor: '#E6E6FA',
+    shadowColor: '#9595C8',
+    shadowOffset: {
+      width: 4,
+      height: 5,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 3.84,
+    opacity: 0.8,
+  },
+  monthContainer: {
+    justifyContent: 'center',
+    //borderStyle: 'dashed',
+    //borderWidth: 1.5,
+    borderRadius: 10,
+    padding: 10,
+    width: Dimensions.get('window').width * 0.4,
+    //borderColor: '#a5807b',
+    backgroundColor: '#E6E6FA',
+    shadowColor: '#9595C8',
+    shadowOffset: {
+      width: 4,
+      height: 5,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 3.84,
+    opacity: 0.8,
+  },
+  weekAverageContainer: {
+    justifyContent: 'center',
+    borderRadius: 10,
+    padding: 10,
+    width: Dimensions.get('window').width * 0.4,
+    marginLeft: Dimensions.get('window').width * 0.1,
+    backgroundColor: '#FDE1FC',
+    shadowColor: '#D6ADD6',
+    shadowOffset: {
+      width: 4,
+      height: 5,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 3.84,
+    opacity: 0.8,
+  },
+  weekContainer: {
+    justifyContent: 'center',
+    borderRadius: 10,
+    padding: 10,
+    width: Dimensions.get('window').width * 0.4,
+    backgroundColor: '#FDE1FC',
+    shadowColor: '#D6ADD6',
+    shadowOffset: {
+      width: 4,
+      height: 5,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 3.84,
+    opacity: 0.8,
+  },
+  weekLableHeader: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#CB6ACA',
+    marginBottom: 3,
+  },
+  weekLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign:'left',
+    color: '#CB6ACA', 
+    
   },
 });
 
