@@ -111,3 +111,54 @@ export const getMotivationalQuote = async () => {
     return null;
   }
 };
+
+export const deleteUserAccount = async (email, password) => {
+  try {
+    const user = auth.currentUser;
+    if (!user) throw new Error('No user is currently signed in.');
+
+    // Re-authenticate the user
+    const credential = EmailAuthProvider.credential(email, password);
+    await reauthenticateWithCredential(user, credential);
+
+    // Delete user data from Firestore
+    const userDocRef = doc(FIREBASE_DB, 'users', user.uid);
+    await deleteDoc(userDocRef);
+
+    // Delete user from Firebase Authentication
+    await deleteUser(user);
+
+    console.log('User account and data deleted successfully.');
+  } catch (error) {
+    console.error('Error deleting user account:', error);
+    throw error; // Re-throw the error for handling in the calling function
+  }
+};
+
+export const getLanguagePreference = async (userId) => {
+  try {
+    const userDoc = await getDoc(doc(FIREBASE_DB, 'users', userId));
+    if (userDoc.exists()) {
+      return userDoc.data().languagePreference || 'en'; // Default to 'en' if no preference is set
+    } else {
+      return 'en'; // Default language
+    }
+  } catch (error) {
+    console.error('Error getting language preference:', error);
+    throw error;
+  }
+};
+
+// Function to set language preference
+export const setLanguagePreference = async (userId, language) => {
+  try {
+    const userRef = doc(FIREBASE_DB, 'users', userId);
+    await updateDoc(userRef, {
+      languagePreference: language, // Ensure this is a string
+    });
+    console.log('Language preference updated successfully');
+  } catch (error) {
+    console.error('Error setting language preference:', error);
+    throw new Error('Error setting language preference');
+  }
+};

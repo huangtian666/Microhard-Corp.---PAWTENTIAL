@@ -34,6 +34,61 @@ const RootLayout = () => {
           headerTintColor: 'gray',
           headerTitleAlign: 'center',
       }}/>
+      <Stack.Screen name="screens/UserProfile/index" 
+        options={{
+          headerBackTitleVisible: false,
+          headerShown: true,
+          headerTitle: 'Profile',
+          headerStyle: {
+            backgroundColor: '#fff',
+          },
+          headerTintColor: 'gray',
+          headerTitleAlign: 'center',
+      }}/>
+    <Stack.Screen name="screens/PrivacySecurity/index" 
+        options={{
+          headerBackTitleVisible: false,
+          headerShown: true,
+          headerTitle: 'Privacy & Security',
+          headerStyle: {
+            backgroundColor: '#fff',
+          },
+          headerTintColor: 'gray',
+          headerTitleAlign: 'center',
+      }}/>
+      <Stack.Screen name="screens/Language/index" 
+        options={{
+          headerBackTitleVisible: false,
+          headerShown: true,
+          headerTitle: 'Language Settings',
+          headerStyle: {
+            backgroundColor: '#fff',
+          },
+          headerTintColor: 'gray',
+          headerTitleAlign: 'center',
+      }}/>
+      <Stack.Screen name="screens/ReportIssue/index" 
+        options={{
+          headerBackTitleVisible: false,
+          headerShown: true,
+          headerTitle: 'Report An Issue',
+          headerStyle: {
+            backgroundColor: '#fff',
+          },
+          headerTintColor: 'gray',
+          headerTitleAlign: 'center',
+      }}/>
+      <Stack.Screen name="screens/FAQ/index" 
+        options={{
+          headerBackTitleVisible: false,
+          headerShown: true,
+          headerTitle: 'Frequently Asked Questions',
+          headerStyle: {
+            backgroundColor: '#fff',
+          },
+          headerTintColor: 'gray',
+          headerTitleAlign: 'center',
+      }}/>
     </Stack>
     </TaskProvider>
   );

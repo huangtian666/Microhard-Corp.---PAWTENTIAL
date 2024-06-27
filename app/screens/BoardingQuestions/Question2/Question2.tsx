@@ -35,7 +35,11 @@ const Question2 = () => {
         const user = auth.currentUser;
         if (user) {
             try {
-                await saveUserData(user.uid, { cleanedPetname, onboardingComplete: true });
+                await saveUserData(user.uid, { 
+                    cleanedPetname, 
+                    onboardingComplete: true,
+                    languagePreference: 'en' 
+                });
                 await AsyncStorage.setItem('onboardingComplete', 'true');
                 setIsLoading(false); // End loading
                 router.push('/screens/NavigationBar');
