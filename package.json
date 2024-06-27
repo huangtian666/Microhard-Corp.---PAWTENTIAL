@@ -34,6 +34,7 @@
     "expo-av": "~14.0.5",
     "expo-constants": "^16.0.2",
     "expo-font": "~12.0.7",
+    "expo-image-picker": "~15.0.5",
     "expo-linking": "~6.3.1",
     "expo-router": "~3.5.15",
     "expo-screen-orientation": "~7.0.5",
@@ -42,6 +43,8 @@
     "expo-system-ui": "~3.0.6",
     "expo-web-browser": "~13.0.3",
     "firebase": "^10.12.2",
+    "moment": "^2.30.1",
+    "moment-timezone": "^0.5.45",
     "nodemailer": "^6.9.13",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -57,8 +60,7 @@
     "react-native-screens": "3.31.1",
     "react-native-svg": "15.2.0",
     "react-native-web": "~0.19.10",
-    "url-polyfill": "^1.1.12",
-    "expo-image-picker": "~15.0.5"
+    "url-polyfill": "^1.1.12"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
