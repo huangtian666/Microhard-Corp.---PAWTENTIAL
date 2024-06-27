@@ -21,12 +21,12 @@ const NavigationBar = () => {
   const auth = FIREBASE_AUTH;
   const db = FIREBASE_DB;
   const [username, setUsername] = useState('');
+  const userId = auth.currentUser ? auth.currentUser.uid : null;
 
 
   useEffect(() => {
     const fetchUsername = async () => {
       try {
-        const userId = auth.currentUser.uid;
         const username = await getUsername(userId);
         setUsername(username);
       } catch (error) {

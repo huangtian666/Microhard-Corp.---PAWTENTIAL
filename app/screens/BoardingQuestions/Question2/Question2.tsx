@@ -8,6 +8,7 @@ import Dog from '../../../../assets/images/dogwithframe.png';
 import Paws from '../../../../assets/images/paws.png';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { saveUserData } from '@/FirestoreService';
+const defaultProfilePicUrl = 'https://firebasestorage.googleapis.com/v0/b/pawtential-d1b22.appspot.com/o/defaultProfilePic.png?alt=media&token=ead6ea6e-dc7e-475b-98e8-607727fce85b';
  
 const Question2 = () => {
     const auth = FIREBASE_AUTH;
@@ -38,7 +39,8 @@ const Question2 = () => {
                 await saveUserData(user.uid, { 
                     cleanedPetname, 
                     onboardingComplete: true,
-                    languagePreference: 'en' 
+                    languagePreference: 'en' ,
+                    profilePic: defaultProfilePicUrl,
                 });
                 await AsyncStorage.setItem('onboardingComplete', 'true');
                 setIsLoading(false); // End loading

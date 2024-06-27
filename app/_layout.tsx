@@ -45,6 +45,28 @@ const RootLayout = () => {
           headerTintColor: 'gray',
           headerTitleAlign: 'center',
       }}/>
+      <Stack.Screen name="screens/ChangeUsername/index" 
+        options={{
+          headerBackTitleVisible: false,
+          headerShown: true,
+          headerTitle: 'Change Username',
+          headerStyle: {
+            backgroundColor: '#fff',
+          },
+          headerTintColor: 'gray',
+          headerTitleAlign: 'center',
+      }}/>
+      <Stack.Screen name="screens/ChangePetname/index" 
+        options={{
+          headerBackTitleVisible: false,
+          headerShown: true,
+          headerTitle: 'Change Pet Name',
+          headerStyle: {
+            backgroundColor: '#fff',
+          },
+          headerTintColor: 'gray',
+          headerTitleAlign: 'center',
+      }}/>
     <Stack.Screen name="screens/PrivacySecurity/index" 
         options={{
           headerBackTitleVisible: false,

@@ -43,6 +43,42 @@ export const checkOnboardingStatus = async (userId) => {
     }
 };
 
+export const getPetname = async (userId) => {
+  try {
+      const userDoc = await getDoc(doc(FIREBASE_DB, 'users', userId));
+      if (userDoc.exists()) {
+          return userDoc.data().cleanedPetname;
+      } else {
+          throw new Error('No such user!');
+      }
+  } catch (error) {
+      console.error('Error fetching pet name:', error);
+      throw error;
+  }
+};
+
+export const updateUsername = async (userId, newUsername) => {
+  try {
+    const userRef = doc(FIREBASE_DB, 'users', userId);
+    await updateDoc(userRef, { cleanedUsername: newUsername.trim() });
+    console.log('Username updated successfully');
+  } catch (error) {
+    console.error('Error updating username:', error);
+    throw new Error('Failed to update username');
+  }
+};
+
+export const updatePetname = async (userId, newPetName) => {
+  try {
+    const userRef = doc(FIREBASE_DB, 'users', userId);
+    await updateDoc(userRef, { cleanedPetname: newPetName.trim() });
+    console.log('Pet name updated successfully');
+  } catch (error) {
+    console.error('Error updating pet name:', error);
+    throw new Error('Failed to update pet name');
+  }
+};
+
 
 export const addTaskToFirestore = async (userId: string, date: string, text: string) => {
   try {

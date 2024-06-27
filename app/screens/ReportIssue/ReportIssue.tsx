@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { SafeAreaView, ScrollView, View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Alert } from 'react-native';
-import { router } from 'expo-router';
-import CustomButton from '@/components/CustomButton';
 
 const ReportIssue = () => {
   const [name, setName] = useState('');
