@@ -6,18 +6,25 @@ import { router } from 'expo-router';
 const FAQ = () => {
   const faqs = [
     {
-      question: "How do I reset my password?",
+      question: "How do I reset my password when signing in?",
       answer: "To reset your password, go to the login screen, click on 'Forgot Password', and follow the instructions.",
     },
     {
-      question: "How do I change my email address?",
-      answer: "To change your email address, go to the account settings, and update your email information.",
+      question: "How do I reset my password in app?",
+      answer:"To reset your password, go to settings, click on 'Privacy & Security', and follow the instructions to update your password.",
     },
     {
       question: "How can I delete my account?",
       answer: "To delete your account, go to the account settings, and click on 'Delete Account'. Follow the instructions to complete the process.",
     },
-    // Add more FAQs as needed
+    {
+      question: "How can I change my username, pet name and profile picture?",
+      answer: "To update your profile, go to settings, and click on 'Account Info'. Follow the instructions to complete the process.",
+    },
+    {
+      question: "Why are my profiles not updated even after I changed them?",
+      answer: "It takes time for the Account Info to be updated. The time taken varies base on your network connection",
+    },
   ];
 
   return (
