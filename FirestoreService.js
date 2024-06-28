@@ -198,3 +198,55 @@ export const setLanguagePreference = async (userId, language) => {
     throw new Error('Error setting language preference');
   }
 };
+
+export const getCurrentWeekRange = () => {
+  const startOfWeek = moment().startOf('isoWeek'); // Monday
+  const endOfWeek = moment().endOf('isoWeek'); // Sunday
+  return { startOfWeek, endOfWeek };
+};
+
+export const fetchFocusSessionsForWeek = async (userId) => {
+  const { startOfWeek, endOfWeek } = getCurrentWeekRange();
+  
+  const sessionsRef = collection(FIREBASE_DB, 'users', userId, 'focusTimes');
+  const q = query(
+    sessionsRef,
+    where('startTime', '>=', startOfWeek.toDate()),
+    where('startTime', '<=', endOfWeek.toDate())
+  );
+  
+  const querySnapshot = await getDocs(q);
+  const sessions = [];
+  querySnapshot.forEach((doc) => {
+    sessions.push({ id: doc.id, ...doc.data() });
+  });
+
+  return sessions;
+};
+
+
+export const calculateWeeklyFocusHours = (sessions) => {
+  const weeklyHours = Array(7).fill(0); // Array to hold hours for each day of the week (Mon-Sun)
+
+  sessions.forEach((session) => {
+    const startTime = moment(session.startTime.toDate());
+    const duration = session.duration; // Duration in hours
+
+    let remainingDuration = duration;
+    let currentTime = startTime.clone();
+
+    while (remainingDuration > 0) {
+      const currentDayIndex = currentTime.isoWeekday() - 1; // Monday = 0, Sunday = 6
+      const endOfDay = currentTime.clone().endOf('day');
+      const timeUntilEndOfDay = endOfDay.diff(currentTime, 'hours', true); // Get the difference in hours (float)
+
+      const timeToAdd = Math.min(timeUntilEndOfDay, remainingDuration);
+      weeklyHours[currentDayIndex] += timeToAdd;
+
+      remainingDuration -= timeToAdd;
+      currentTime.add(timeToAdd, 'hours');
+    }
+  });
+
+  return weeklyHours;
+};
