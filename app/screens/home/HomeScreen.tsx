@@ -26,7 +26,7 @@ const Home: React.FC = () => {
 
   const [selectedMonthData, setSelectedMonthData] = useState({
     index: currentMonthIndex,
-    hours: monthlyHours[currentMonthIndex].hours,
+    hours: monthlyHours[currentMonthIndex],
   });
 
   const handleDataPointClick = (data) => {
@@ -60,6 +60,7 @@ const Home: React.FC = () => {
            const monthlyFocusHours = calculateMonthlyFocusHoursForCurrentYear(yearSessions);
            console.log('Monthly Focus Hours:', monthlyFocusHours);
            setMonthlyHours(monthlyFocusHours);
+           setSelectedMonthData({ index: currentMonthIndex, hours: monthlyFocusHours[currentMonthIndex] });
 
         } catch (error) {
           console.error('Error fetching focus sessions:', error);
@@ -215,13 +216,13 @@ const Home: React.FC = () => {
         {/* Monthly Accumulated Hours */} 
         <Text style={styles.chartTitle}>Monthly Accumulated Hours</Text>  
             <View style={styles.customLabelContainer}>
-              <View style={styles.monthContainer}>
-                <Text style={styles.customLableHeader}>{`${monthsOfYear[selectedMonthData.index] || monthsOfYear[currentMonthIndex]} :`}</Text>
-                <Text style={styles.customLabel}>{`Hours: ${selectedMonthData.hours.toFixed(2)}`}</Text>
+            <View style={styles.monthContainer}>
+                <Text style={styles.customLableHeader}>{`${monthsOfYear[selectedMonthData.index]} :`}</Text>
+                <Text style={styles.customLabel}>{`Hours: ${selectedMonthData.hours}`}</Text>
               </View>
               <View style={styles.monthAverageContainer}>
                 <Text style={styles.customLableHeader}>{`Monthly Average: `}</Text>
-                <Text style={styles.customLabel}>{`${averageMonthlyHours.toFixed(2)} hours`}</Text>
+                <Text style={styles.customLabel}>{`${averageWeeklyHours.toFixed(2)} hours`}</Text>
               </View>
             </View>
         <View style={styles.chartContainer2}>

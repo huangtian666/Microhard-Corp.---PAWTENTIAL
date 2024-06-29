@@ -1,7 +1,6 @@
 import { doc, setDoc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, collection, query, where  } from "firebase/firestore";
 import { FIREBASE_DB, FIREBASE_AUTH } from '@/FirebaseConfig';
 import moment from 'moment';
-import momentTimezone from 'moment-timezone';
 
 const auth = FIREBASE_AUTH;
 
