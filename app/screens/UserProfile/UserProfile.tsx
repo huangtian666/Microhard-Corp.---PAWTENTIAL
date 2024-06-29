@@ -27,8 +27,8 @@ const Profile = () => {
         const userDoc = await getDoc(doc(FIREBASE_DB, 'users', userId));
         if (userDoc.exists()) {
           const userData = userDoc.data();
-          setUsername(userData.cleanedUsername || '');
-          setPetname(userData.cleanedPetname || '');
+          setUsername(userData.cleanedUsername || '-');
+          setPetname(userData.cleanedPetname || '-');
           setProfilePic(userData.profilePic || defaultProfilePicUrl); // Use default if no profilePic
         }
       } catch (error) {

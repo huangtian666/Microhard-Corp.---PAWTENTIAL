@@ -1,6 +1,7 @@
 import { doc, setDoc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, collection, query, where  } from "firebase/firestore";
 import { FIREBASE_DB, FIREBASE_AUTH } from '@/FirebaseConfig';
 import moment from 'moment';
+import momentTimezone from 'moment-timezone';
 
 const auth = FIREBASE_AUTH;
 
@@ -199,28 +200,39 @@ export const setLanguagePreference = async (userId, language) => {
   }
 };
 
-export const getCurrentWeekRange = () => {
-  const startOfWeek = moment().startOf('isoWeek'); // Monday
-  const endOfWeek = moment().endOf('isoWeek'); // Sunday
+const getCurrentWeekRange = () => {
+  const now = moment().utcOffset(8 * 60); // Adjust for your time zone offset (in hours and minutes)
+  // Set the start of the week to Monday (ISO week)
+  const startOfWeek = now.clone().startOf('isoWeek');
+  console.log(startOfWeek.toDate());
+
+  // Get the end of the week (usually Sunday)
+  const endOfWeek = startOfWeek.clone().endOf('isoWeek');
+
   return { startOfWeek, endOfWeek };
 };
 
 export const fetchFocusSessionsForWeek = async (userId) => {
   const { startOfWeek, endOfWeek } = getCurrentWeekRange();
+  const startOfWeekString = startOfWeek.toISOString();
+  const endOfWeekString = endOfWeek.toISOString();
   
-  const sessionsRef = collection(FIREBASE_DB, 'users', userId, 'focusTimes');
+  const focusTimeRef = collection(FIREBASE_DB, 'users', userId, 'focusTimes');
   const q = query(
-    sessionsRef,
-    where('startTime', '>=', startOfWeek.toDate()),
-    where('startTime', '<=', endOfWeek.toDate())
-  );
+    focusTimeRef,
+    where('startTime', '>=', startOfWeekString),
+    where('startTime', '<=', endOfWeekString)
+  ); 
   
   const querySnapshot = await getDocs(q);
+  console.log('querySnapShot: ' + querySnapshot)
   const sessions = [];
   querySnapshot.forEach((doc) => {
+    console.log('doc: ' + doc)
     sessions.push({ id: doc.id, ...doc.data() });
   });
 
+  console.log(sessions)
   return sessions;
 };
 
@@ -229,24 +241,101 @@ export const calculateWeeklyFocusHours = (sessions) => {
   const weeklyHours = Array(7).fill(0); // Array to hold hours for each day of the week (Mon-Sun)
 
   sessions.forEach((session) => {
-    const startTime = moment(session.startTime.toDate());
-    const duration = session.duration; // Duration in hours
+    let startTime = moment(session.startTime).utcOffset(0*60);
+    let durationInHours = session.duration / 60; // Convert duration to hours
 
-    let remainingDuration = duration;
-    let currentTime = startTime.clone();
+    console.log(`Session ID: ${session.id}`);
+    console.log(`Start Time: ${startTime.format('YYYY-MM-DD HH:mm:ss')}`);
+    console.log(`Duration: ${durationInHours} hours`);
 
-    while (remainingDuration > 0) {
-      const currentDayIndex = currentTime.isoWeekday() - 1; // Monday = 0, Sunday = 6
-      const endOfDay = currentTime.clone().endOf('day');
-      const timeUntilEndOfDay = endOfDay.diff(currentTime, 'hours', true); // Get the difference in hours (float)
+    while (durationInHours > 0) {
+      const currentDayIndex = startTime.isoWeekday() - 1; // Monday = 0, Sunday = 6
+      const endOfDay = startTime.clone().endOf('day');
+      const timeUntilEndOfDay = endOfDay.diff(startTime, 'hours', true); // Get the difference in hours (float)
 
-      const timeToAdd = Math.min(timeUntilEndOfDay, remainingDuration);
+      const timeToAdd = Math.min(timeUntilEndOfDay, durationInHours);
       weeklyHours[currentDayIndex] += timeToAdd;
 
-      remainingDuration -= timeToAdd;
-      currentTime.add(timeToAdd, 'hours');
+      console.log(`Adding ${timeToAdd.toFixed(2)} hours to ${startTime.format('dddd')} (Index: ${currentDayIndex})`);
+      console.log(`Remaining Duration: ${(durationInHours - timeToAdd).toFixed(2)} hours`);
+
+      durationInHours -= timeToAdd;
+      startTime = startTime.add(timeToAdd, 'hours').startOf('day');
     }
   });
 
-  return weeklyHours;
+  console.log('Final Weekly Hours:', weeklyHours);
+
+  // Round each element in the weeklyHours array to 1 decimal place
+  const roundedWeeklyHours = weeklyHours.map(hours => parseFloat(hours.toFixed(2)));
+
+  console.log('Rounded Weekly Hours:', roundedWeeklyHours);
+
+  return roundedWeeklyHours;
+};
+
+export const fetchFocusSessionsForYear = async (userId) => {
+  const currentYear = moment().year();
+  const startOfYearString = moment().startOf('year').toISOString();
+  const endOfYearString = moment().endOf('year').toISOString();
+
+  const focusTimeRef = collection(FIREBASE_DB, 'users', userId, 'focusTimes');
+
+  const q = query(
+    focusTimeRef,
+    where('startTime', '>=', startOfYearString),
+    where('startTime', '<=', endOfYearString)
+  );
+
+  const querySnapshot = await getDocs(q);
+  console.log('querySnapShot: ' + querySnapshot)
+  const sessions = [];
+  querySnapshot.forEach((doc) => {
+    console.log('doc: ' + doc)
+    sessions.push({ id: doc.id, ...doc.data() });
+  });
+
+  console.log(sessions)
+  return sessions;
+};
+
+
+export const calculateMonthlyFocusHoursForCurrentYear = (sessions) => {
+  const monthlyHours = Array(12).fill(0); // Array to hold hours for each month (Jan-Dec)
+
+  sessions.forEach((session) => {
+    let startTime = moment(session.startTime).utcOffset(0);
+    let durationInHours = session.duration / 60; // Convert duration to hours
+
+    console.log(`Session ID: ${session.id}`);
+    console.log(`Start Time: ${startTime.format('YYYY-MM-DD HH:mm:ss')}`);
+    console.log(`Duration: ${durationInHours} hours`);
+
+    while (durationInHours > 0) {
+      const currentMonthIndex = startTime.month(); // January = 0, December = 11
+      const endOfMonth = startTime.clone().endOf('month');
+      const timeUntilEndOfMonth = endOfMonth.diff(startTime, 'hours', true); // Get the difference in hours (float)
+
+      const timeToAdd = Math.min(timeUntilEndOfMonth, durationInHours);
+      monthlyHours[currentMonthIndex] += timeToAdd;
+
+      console.log(`Adding ${timeToAdd.toFixed(2)} hours to ${startTime.format('MMMM')} (Index: ${currentMonthIndex})`);
+      console.log(`Remaining Duration: ${(durationInHours - timeToAdd).toFixed(2)} hours`);
+
+      durationInHours -= timeToAdd;
+      startTime = startTime.add(timeToAdd, 'hours').startOf('day');
+    }
+  });
+
+  console.log('Final Monthly Hours:', monthlyHours);
+
+  // Ensure no NaN values
+  const roundedMonthlyHours = monthlyHours.map(hours => {
+    const rounded = parseFloat(hours.toFixed(1));
+    return isNaN(rounded) ? 0 : rounded;
+  });
+
+  console.log('Rounded Monthly Hours:', roundedMonthlyHours);
+
+  return roundedMonthlyHours;
 };

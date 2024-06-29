@@ -1,36 +1,4 @@
-import {SafeAreaView, Text, Image, StyleSheet, ScrollView, Dimensions, Alert} from 'react-native';
-import React, {useState} from 'react';
-
- 
-const Timer = () => {
-   
-    return (
-        <ScrollView contentContainerStyle={{paddingBottom: 20, backgroundColor: 'white'}} >
-            <SafeAreaView style={styles.container}>
-                <Text style ={styles.text1}>Timer</Text>   
-            </SafeAreaView>
-        </ScrollView>
-    ); 
-}
-
-const styles = StyleSheet.create({
-    container: {
-        alignItems: 'center',
-        width: Dimensions.get('window').width,
-        height:Dimensions.get('window').height,
-    },
-    text1: {
-        fontSize: 30,
-        color: '#551B26',
-        fontWeight: 'bold',
-        marginBottom: '10%',
-        marginTop: '15%',
-    },
-});
-
-export default Timer;
-
-/*import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Image, StyleSheet, Text, Dimensions } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Picker } from '@react-native-picker/picker';
@@ -158,8 +126,10 @@ const TimerScreen = () => {
             {timerType === 'focus' ? 'Focus Timer' : 'Break Timer'}
           </Text>
         )}
-        <Image source={timerType === 'focus' ? focusImage : breakImage} style={styles.pawContainerImage} resizeMode="contain" />
-        <Text style={styles.time}>{formatTime(remainingTime)}</Text>
+        <View style={styles.pawContainer}>
+          <Image source={timerType === 'focus' ? focusImage : breakImage} style={styles.pawContainerImage} resizeMode="contain" />
+          <Text style={styles.time}>{formatTime(remainingTime)}</Text>
+        </View>
         {!isRunning && (
           <Picker
             selectedValue={duration}
@@ -207,7 +177,7 @@ const styles = StyleSheet.create({
     marginTop: 7,
   },
   switchTextActive: {
-    color: 'black',
+    color: '#551B26',
     borderBottomColor: 'black',
     marginTop: 7,
   },
@@ -216,27 +186,35 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: -30,
     marginBottom: 20,
+    color: '#551B26',
+  },
+  pawContainer: {
+    width: 350,
+    height: 350,
+    marginBottom: 0,
+    marginTop: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   pawContainerImage: {
-    width: 300,
-    height: 300,
-    marginBottom: 130,
-    marginTop: -20,
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
   },
   time: {
-    fontSize: 26,
+    fontSize: 40,
     fontWeight: 'bold',
     color: 'white',
-    marginTop: -270,
-    marginBottom: 30,
+    marginBottom: -110
   },
   picker: {
     height: 50,
     width: 150,
-    marginBottom: 120,
+    marginTop: -25,
+    marginBottom: 150,
   },
   button: {
-    marginTop: 15,
+    marginTop: 20,
     marginBottom: 10, // Adjust this value to move the button down
   },
   buttonContainer: {
@@ -248,8 +226,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: 40,
     marginTop: 20,
-   
   },
 });
 
-export default TimerScreen;*/
+export default TimerScreen;
