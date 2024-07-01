@@ -79,7 +79,7 @@ const Home: React.FC = () => {
   const todayHours = weeklyHours[todayIndex]; // Focused hours for today
   const monthHours = monthlyHours[currentMonthIndex];
   console.log('Today Hours:', todayHours); // Log today hours
-  const averageWeeklyHours = monthlyHours.reduce((total, month) => total + month, 0) / monthlyHours.length; // Corrected average calculation // Calculate weekly average
+  const averageWeeklyHours = weeklyHours.reduce((total, month) => total + month, 0) / monthlyHours.length; // Corrected average calculation // Calculate weekly average
 
   const progress = todayTotalTasks > 0 ? todayCompletedTasks / todayTotalTasks : 0;
 
