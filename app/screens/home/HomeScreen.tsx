@@ -20,7 +20,7 @@ const Home: React.FC = () => {
   const [quote, setQuote] = useState({ text: '', author: '' });
   const [weeklyHours, setWeeklyHours] = useState(Array(7).fill(0));
   const [monthlyHours, setMonthlyHours] = useState(Array(12).fill(0)); // State to hold monthly hours
-  const averageMonthlyHours = monthlyHours.reduce((monthlyHour, total) => total +monthlyHour, 0) / 12;
+  const averageMonthlyHours = monthlyHours.reduce((monthlyHour, total) => total + monthlyHour, 0) / 12;
   console.log(averageMonthlyHours)
   const currentMonthIndex = new Date().getMonth();
 
@@ -222,7 +222,7 @@ const Home: React.FC = () => {
               </View>
               <View style={styles.monthAverageContainer}>
                 <Text style={styles.customLableHeader}>{`Monthly Average: `}</Text>
-                <Text style={styles.customLabel}>{`${averageWeeklyHours.toFixed(2)} hours`}</Text>
+                <Text style={styles.customLabel}>{`${averageMonthlyHours.toFixed(2)} hours`}</Text>
               </View>
             </View>
         <View style={styles.chartContainer2}>

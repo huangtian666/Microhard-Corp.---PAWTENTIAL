@@ -106,6 +106,7 @@ const NavigationBar = () => {
           headerTitle: () => <CustomHeaderTitle title="To-Do List" icon="list" />,
           headerStyle: { 
             borderWidth: 0.5,
+            borderTopColor: 'white',
             backgroundColor: 'white', // Example background color for header
           },
           headerTitleAlign: 'left',
@@ -118,6 +119,7 @@ const NavigationBar = () => {
                 headerShown: true,
                 headerTitle: () => <CustomHeaderTitle title={`Hi ${username} !`} icon="home-outline" />,
                 headerStyle: { 
+                  borderTopColor: 'white',
                   backgroundColor: 'white', // Example background color for header
                   borderWidth: 0.5,
                 },
@@ -135,6 +137,7 @@ const NavigationBar = () => {
                         headerShown: true,
                         headerTitle: () => <CustomHeaderTitle title={`White Noise Videos`} icon="musical-notes-outline" />,
                         headerStyle: { 
+                          borderTopColor: 'white',
                           backgroundColor: 'white', // Example background color for header
                           borderWidth: 0.5,
                         },
