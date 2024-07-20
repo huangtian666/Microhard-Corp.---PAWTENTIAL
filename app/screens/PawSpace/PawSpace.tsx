@@ -1,11 +1,15 @@
-import { SafeAreaView, StyleSheet, ScrollView, Dimensions, ImageBackground, View, Text, TouchableOpacity } from 'react-native';
+import { SafeAreaView, StyleSheet, ScrollView, Dimensions, ImageBackground, View, Text, TouchableOpacity, Modal } from 'react-native';
 import React, { useState } from 'react';
 import { Fontisto, FontAwesome, FontAwesome5, FontAwesome6, MaterialIcons } from '@expo/vector-icons';
+import Shop from '../Shop';
+import Inventory from '../Inventory';
 
 const PawSpace = () => {
   // Mock data for health and mood
   const [health, setHealth] = useState(80); // 80% health
-  const [mood, setMood] = useState(50); // 50% mood
+  const [mood, setMood] = useState(80); // 50% mood
+  const [shopVisible, setShopVisible] = useState(false); // State to control the modal visibility
+  const [inventoryVisible, setInventoryVisible] = useState(false); // State to control the modal visibility
 
   return (
     <View style={styles.container}>
@@ -44,13 +48,29 @@ const PawSpace = () => {
         </ImageBackground>
       </ScrollView>
       <View style={styles.bottomButtons}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={() => setShopVisible(true)}>
         <Fontisto name="shopping-store" size={25} color='red' />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={() => setInventoryVisible(true)}>
         <MaterialIcons name="inventory" size={25} color='#A5807B' />
         </TouchableOpacity>
       </View>
+      <Modal
+        transparent={true}
+        visible={shopVisible}
+        animationType="slide"
+        onRequestClose={() => setShopVisible(false)}
+      >
+        <Shop visible={shopVisible} onClose={() => setShopVisible(false)} />
+      </Modal>
+      <Modal
+        transparent={true}
+        visible={inventoryVisible}
+        animationType="slide"
+        onRequestClose={() => setInventoryVisible(false)}
+      >
+        <Inventory visible={inventoryVisible} onClose={() => setInventoryVisible(false)} />
+      </Modal>
     </View>
   );
 }
