@@ -1,21 +1,43 @@
 import React, { useState } from 'react';
-import { SafeAreaView, ScrollView, View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Alert } from 'react-native';
+import { SafeAreaView, ScrollView, View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 const ReportIssue = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [issue, setIssue] = useState('');
+  
+  const auth = getAuth();
+  const db = getFirestore();
 
-  const handleSubmit = () => {
-    if (name && email && issue) {
-      // Here you can integrate with your backend or email service to handle the form submission
-      console.log('Issue submitted:', { name, email, issue });
-      Alert.alert('Thank you!', 'Your issue has been submitted.');
-      setName('');
-      setEmail('');
-      setIssue('');
-    } else {
+  const handleSubmit = async () => {
+    if (!name || !email || !issue) {
       Alert.alert('Error', 'Please fill out all fields.');
+      return;
+    }
+
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        // Add a new document with a generated ID
+        await addDoc(collection(db, "issueReports"), {
+          name,
+          email,
+          issue,
+          userId: user.uid, // Store the user's UID
+          timestamp: new Date()
+        });
+        Alert.alert('Thank you!', 'Your issue has been submitted.');
+        setName('');
+        setEmail('');
+        setIssue('');
+      } else {
+        Alert.alert('Error', 'You must be logged in to report an issue.');
+      }
+    } catch (error) {
+      console.error("Error adding document: ", error);
+      Alert.alert('Error', 'There was an issue submitting your report. Please try again.');
     }
   };
 
@@ -108,3 +130,4 @@ const styles = StyleSheet.create({
 });
 
 export default ReportIssue;
+
