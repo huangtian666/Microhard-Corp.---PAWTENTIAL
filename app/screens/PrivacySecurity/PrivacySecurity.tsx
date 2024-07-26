@@ -1,18 +1,43 @@
-import React, {useState} from 'react';
-import { SafeAreaView, View, Text, TouchableOpacity, ScrollView, StyleSheet, Dimensions } from 'react-native';
+
+
+
+
+
+import React, { useState } from 'react';
+import { SafeAreaView, View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { getAuth, updatePassword } from 'firebase/auth';
 import CustomInput from '@/components/CustomInput';
 import CustomButton from '@/components/CustomButton';
 
-const PrivacySecurity = () => { 
+const PrivacySecurity = () => {
+  const auth = getAuth();
   const navigation = useNavigation();
-  const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
-  const onUpdatePressed = () => {
-    console.log('update password');
-  }
+  const onUpdatePressed = async () => {
+    console.log("Button Pressed");
+    if (newPassword !== confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        await updatePassword(user, newPassword);
+        alert('Password updated successfully');
+        setNewPassword('');
+        setConfirmPassword('');
+      } else {
+        alert('No user is logged in');
+      }
+    } catch (error: any) {
+      alert('Failed to update password: ' + error.message);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -22,15 +47,27 @@ const PrivacySecurity = () => {
           <View style={styles.option}>
             <Text style={styles.optionText}>Change Password</Text>
           </View>
-          <View style={styles.input} >
-            <CustomInput placeholder='New Password' value={password} 
-                    setValue = {setPassword} secureTextEntry={true} placeholderTextColor='gray'/>
-            <CustomInput placeholder='Confirm Password' value={newPassword} 
-                    setValue = {setNewPassword} secureTextEntry={true} placeholderTextColor='gray'/>
+          <View style={styles.input}>
+            <CustomInput 
+              placeholder='New Password' 
+              value={newPassword} 
+              setValue={setNewPassword} 
+              secureTextEntry={true} 
+            />
+            <CustomInput 
+              placeholder='Confirm Password' 
+              value={confirmPassword} 
+              setValue={setConfirmPassword} 
+              secureTextEntry={true} 
+            />
             <CustomButton 
-                        text='Update Password' 
-                        onPress={onUpdatePressed}/>
-        </View>        
+              text='Update Password' 
+              onPress={onUpdatePressed} 
+              bgColor="#ea9c8a" 
+              fgColor="white" 
+              disabled={false} 
+            />
+          </View>
         </View>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Privacy</Text>
@@ -83,3 +120,4 @@ const styles = StyleSheet.create({
 });
 
 export default PrivacySecurity;
+
